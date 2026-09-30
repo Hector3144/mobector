@@ -60,3 +60,9 @@ GitHub Actions contiene pruebas en Windows/Linux y generación del ZIP. Su confi
 ## Código y licencias
 
 La autoría original del proyecto se conserva. No se añade una licencia de publicación al código propio sin decisión del autor. xterm.js y fit incluyen su licencia MIT en `assets/`. PySide6, Qt, Paramiko y dependencias mantienen sus propias licencias; el instalador descarga sus distribuciones oficiales. Inventario en `docs/DEPENDENCIES.json`.
+
+## Package ZIP automático
+
+Cada push, pull request o ejecución manual de **MobHector QA** genera un único package tras aprobar las pruebas en Windows y Linux. Descárgalo en **Actions → MobHector QA → ejecución → Artifacts → MobHector-VERSION-package**, o mediante el enlace del resumen. El archivo de Actions contiene el ZIP instalable completo y su SHA-256. Los artifacts se conservan 90 días, sujetos a las políticas de GitHub del repositorio.
+
+El nombre y la carpeta del ZIP se obtienen de `VERSION.txt`. Para generarlo localmente: `python tools/build_release.py`; queda en `dist/`. Incluye código, assets, instaladores, documentación y pruebas. No incorpora Python ni las dependencias descargables. Si las pruebas fallan, no se publica un package aprobado.

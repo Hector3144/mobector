@@ -1,6 +1,8 @@
 """Build a clean reproducible installer ZIP and integrity manifests."""
 from pathlib import Path
 import hashlib
+import os
+import re
 import shutil
 import tempfile
 import zipfile
@@ -10,9 +12,12 @@ FORBIDDEN={'config.json','known_hosts','.env','MANIFEST_SHA256.txt','MANIFEST_FU
 
 def build():
     dist=ROOT/'dist';dist.mkdir(exist_ok=True)
-    target=dist/'MobHector_1.4.1_WINDOWS_INSTALL_UPDATE.zip'
+    version=(ROOT/'VERSION.txt').read_text(encoding='utf-8').strip()
+    if not re.fullmatch(r'[0-9]+\.[0-9]+\.[0-9]+(?:-[A-Za-z0-9.-]+)?',version):
+        raise ValueError('VERSION.txt must contain a valid release version')
+    target=dist/f'MobHector_{version}_WINDOWS_INSTALL_UPDATE.zip' 
     with tempfile.TemporaryDirectory() as temp:
-        stage=Path(temp)/'MobHector_1.4.1';stage.mkdir()
+        stage=Path(temp)/f'MobHector_{version}';stage.mkdir()
         for path in sorted(ROOT.rglob('*')):
             rel=path.relative_to(ROOT)
             if not path.is_file() or any(p in SKIP for p in rel.parts):continue
@@ -31,6 +36,12 @@ def build():
                     z.writestr(info,path.read_bytes())
     digest=hashlib.sha256(target.read_bytes()).hexdigest()
     target.with_suffix('.zip.sha256').write_text(digest+'  '+target.name+'\n')
+    with zipfile.ZipFile(target) as archive:
+        if archive.testzip() is not None:
+            raise RuntimeError('ZIP integrity verification failed')
+    if os.environ.get('GITHUB_OUTPUT'):
+        with open(os.environ['GITHUB_OUTPUT'],'a',encoding='utf-8') as output:
+            output.write(f'version={version}\nzip={target}\nchecksum={target.with_suffix(".zip.sha256")}\n')
     print(str(target));print(digest)
     return target
 if __name__=='__main__':build()

@@ -39,9 +39,30 @@ jobs:
           QT_QPA_PLATFORM: offscreen
           QTWEBENGINE_CHROMIUM_FLAGS: --disable-gpu
         run: python tools/smoke_colors.py
-      - name: Build installer package
-        run: python tools/build_release.py
-      - uses: actions/upload-artifact@v4
+  package:
+    name: ZIP del proyecto
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
-          name: MobHector-1.4.1-${{ matrix.os }}
-          path: dist/*
+          python-version: '3.13'
+      - name: Build and verify ZIP
+        id: build
+        run: python tools/build_release.py
+      - name: Publish downloadable package
+        id: upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: MobHector-${{ steps.build.outputs.version }}-package
+          path: |
+            ${{ steps.build.outputs.zip }}
+            ${{ steps.build.outputs.checksum }}
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 90
+      - name: Download link
+        env:
+          PACKAGE_URL: ${{ steps.upload.outputs.artifact-url }}
+        run: echo "[Descargar ZIP del proyecto]($PACKAGE_URL)" >> "$GITHUB_STEP_SUMMARY"
