@@ -66,3 +66,11 @@ La autoría original del proyecto se conserva. No se añade una licencia de publ
 Cada push, pull request o ejecución manual de **MobHector QA** genera un único package tras aprobar las pruebas en Windows y Linux. Descárgalo en **Actions → MobHector QA → ejecución → Artifacts → MobHector-VERSION-package**, o mediante el enlace del resumen. El archivo de Actions contiene el ZIP instalable completo y su SHA-256. Los artifacts se conservan 90 días, sujetos a las políticas de GitHub del repositorio.
 
 El nombre y la carpeta del ZIP se obtienen de `VERSION.txt`. Para generarlo localmente: `python tools/build_release.py`; queda en `dist/`. Incluye código, assets, instaladores, documentación y pruebas. No incorpora Python ni las dependencias descargables. Si las pruebas fallan, no se publica un package aprobado.
+
+## Inicio en Linux (Ubuntu/Debian)
+
+Ejecuta `bash instalar_linux.sh` con tu usuario normal, sin sudo. Prepara los paquetes con apt, crea `.venv`, instala `requirements.txt` y abre la aplicación. Sólo apt solicita privilegios. Necesita Internet y Python 3.10 o posterior.
+
+Funciona desde el ZIP extraído o descargando únicamente el script: en ese caso clona el repositorio en `~/.local/share/MobHector/source` (respeta `XDG_DATA_HOME`). Si encuentra una copia previa, la reutiliza sin sobrescribirla ni actualizarla automáticamente.
+
+Para volver a abrir: `bash ejecutar_linux.sh` desde la carpeta del proyecto. Opciones de instalación: `--no-launch` prepara sin abrir; `--skip-system` omite apt. Necesitas escritorio gráfico; no ejecutes MobHector como root. Linux conserva las limitaciones descritas: no hay consola ConPTY ni Windows Credential Manager. Instalador verificado por sintaxis y ramas sin cambios; instalación completa pendiente en Ubuntu/Debian real.

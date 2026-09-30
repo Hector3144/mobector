@@ -32,7 +32,7 @@ def build():
             for path in sorted(stage.rglob('*')):
                 if path.is_file():
                     info=zipfile.ZipInfo(path.relative_to(Path(temp)).as_posix(),date_time=(2026,9,29,0,0,0))
-                    info.compress_type=zipfile.ZIP_DEFLATED;info.external_attr=0o100644<<16
+                    info.compress_type=zipfile.ZIP_DEFLATED;info.external_attr=(0o100755 if path.suffix=='.sh' else 0o100644)<<16
                     z.writestr(info,path.read_bytes())
     digest=hashlib.sha256(target.read_bytes()).hexdigest()
     target.with_suffix('.zip.sha256').write_text(digest+'  '+target.name+'\n')
