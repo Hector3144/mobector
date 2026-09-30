@@ -1,0 +1,42 @@
+MOBHECTOR 1.2.19 - SFTP DESPUES DEL SU
+========================================
+
+1.2.18 YA LOGRABA:
+    Terminal = usuario destino
+
+pero podía caer a:
+    SFTP = usuario temporal Platon
+
+1.2.19 cambia el método del SFTP destino.
+
+ANTES:
+    intentar arrancar sftp-server mediante un `su` con comando directo
+
+AHORA:
+    conexión Platon auxiliar
+      -> PTY interactivo
+      -> su - USUARIO
+      -> Password
+      -> misma verificación BEGIN/id -un/END de la terminal
+      -> stty -echo
+      -> cd "$HOME"
+      -> stty raw -echo
+      -> exec sftp-server
+      -> SFTPClient
+
+Así el SFTP pasa primero por el mismo `su -` que ya funciona en la terminal.
+
+AISLAMIENTO:
+    terminal principal = conexión Platon #1
+    SFTP usuario destino = conexión Platon #2
+    fallback SFTP Platon = conexión aislada
+
+Si el SFTP destino falla, no afecta la terminal principal.
+
+RESULTADO ESPERADO:
+    Terminal = usuario destino
+    SFTP = usuario destino
+    Home SFTP = home del usuario destino
+    Transferencias = permisos del usuario destino
+
+La contraseña continúa sólo en RAM.

@@ -1,0 +1,33 @@
+MOBHECTOR 1.2.22 - PLATON SFTP HOME POR DEFECTO
+=================================================
+
+DISEÑO
+------
+TERMINAL:
+    Platon
+      -> su - USUARIO
+      -> Password
+      -> usuario destino
+
+SFTP / ARCHIVOS:
+    conexión SFTP temporal Platon
+      -> identidad Platon
+      -> HOME por defecto que devuelve el propio SFTP
+      -> NO se fuerza /home/USUARIO_DEL_SU
+
+SE ELIMINA
+----------
+- descubrimiento del HOME del usuario del su;
+- cambio de ruta SFTP hacia ese HOME;
+- modo path-only;
+- mensajes especiales de Permission denied por esa ruta.
+
+SE CONSERVA
+-----------
+- su - automático de terminal;
+- password sólo en RAM;
+- SFTP Platon aislado de la terminal;
+- transferencias;
+- MultiExec;
+- Vim/TUI;
+- historial/clipboard/Glass/detach.

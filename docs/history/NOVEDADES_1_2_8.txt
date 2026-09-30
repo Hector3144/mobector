@@ -1,0 +1,17 @@
+MOBHECTOR 1.2.8
+
+La evidencia 1.2.7 confirma que ANTES_CLEAR_001..120 ya se conserva
+completo en múltiples ejecuciones.
+
+Se detectó una anomalía aparte:
+  ^[[5~SALIDA_NUEVA_001
+
+^[[5~ es PageUp llegando al PTY.
+
+1.2.8:
+- captura Shift+PageUp/PageDown en Qt antes de WebEngine;
+- captura Ctrl+Shift+Home/End en Qt;
+- consume keyPress y keyRelease;
+- xterm agrega una segunda barrera;
+- el DOM mantiene una tercera barrera;
+- los atajos sólo navegan el historial local.

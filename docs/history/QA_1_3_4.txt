@@ -1,0 +1,28 @@
+MobHector 1.3.4 — QA focalizada
+
+Resultado general:
+- py_compile: OK
+- qa_mobhector.py --source: APROBADO
+
+Cobertura focalizada 1.3.4:
+1. Zoom de terminal con Ctrl + rueda
+   - Interceptado en capture:true
+   - preventDefault + stopPropagation + stopImmediatePropagation
+   - evita desplazamiento espurio del viewport/historial al acercar o alejar
+2. Barra principal personalizable
+   - menú contextual para mostrar/ocultar botones
+   - diálogo para reordenar botones y modo compacto
+   - toolbar movible/flotante
+3. UX panel izquierdo
+   - acciones de sesión en grid 2x2 para ancho reducido
+   - docks con ancho mínimo superior y títulos cortos
+4. SFTP / Archivos
+   - columna Nombre redimensionable
+   - iconos visuales para carpetas/archivos/enlaces en remoto
+   - árbol local con columnas redimensionables e iconos visibles
+
+FIX3 — QA updater final:
+- validar_updater_final_v1_3_4.py: 8/8 OK
+- validadores validar_*.py: 33 ejecutados / 0 fallos
+- qa_mobhector.py --source: 89 PASS / 0 FAIL
+- verificación final dinámica por APP_VERSION + VERSION.txt + SHA-256 del core

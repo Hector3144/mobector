@@ -1,0 +1,1588 @@
+<!doctype html>
+<html data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' qrc:; style-src 'self' 'unsafe-inline'; img-src 'self' data: file:; font-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<link rel="stylesheet" href="xterm.css">
+<style>
+:root{--page-bg:#050607;--viewport-bg:#080a0d;--scroll-thumb:#3a4654;}
+html,body,#terminal{width:100%;height:100%;margin:0;padding:0;overflow:hidden;background:var(--page-bg);}
+html[data-theme="glass"],html[data-theme="glass"] body,html[data-theme="glass"] #terminal{background:transparent!important;}
+html[data-theme="light"],html[data-theme="light"] body,html[data-theme="light"] #terminal{background:#f7f9fc!important;}
+body{box-sizing:border-box;} #terminal{box-sizing:border-box;padding:5px 7px 3px 7px;} .xterm{height:100%;}
+.xterm-viewport{scrollbar-color:var(--scroll-thumb) var(--viewport-bg);scrollbar-width:thin;}
+html[data-theme="glass"] .xterm-viewport{scrollbar-color:rgba(126,161,174,.62) rgba(4,9,13,.28);}
+html[data-theme="light"] .xterm-viewport{scrollbar-color:#a7b6c2 #edf2f6;}
+
+html[data-theme="coffee"],html[data-theme="coffee"] body,html[data-theme="coffee"] #terminal{background:#efe2cf!important;}
+html[data-theme="coffee"] .xterm-viewport{scrollbar-color:#aa8f71 #e4d3bc;}
+html[data-theme="midnight"],html[data-theme="midnight"] body,html[data-theme="midnight"] #terminal{background:#07111f!important;}
+html[data-theme="forest"],html[data-theme="forest"] body,html[data-theme="forest"] #terminal{background:#07130d!important;}
+html[data-theme="purple"],html[data-theme="purple"] body,html[data-theme="purple"] #terminal{background:#130b1b!important;}
+html[data-theme="sepia"],html[data-theme="sepia"] body,html[data-theme="sepia"] #terminal{background:#f0dfc4!important;}
+html[data-scrollbar="false"] .xterm-viewport{scrollbar-width:none!important;}
+html[data-scrollbar="false"] .xterm-viewport::-webkit-scrollbar{width:0!important;height:0!important;}
+#historyBadge{position:fixed;right:14px;top:10px;z-index:1000;display:none;padding:5px 9px;border-radius:7px;font:600 11px/1.2 "Segoe UI",sans-serif;color:#eaf5f7;background:rgba(18,39,45,.90);border:1px solid rgba(130,190,200,.42);box-shadow:0 2px 12px rgba(0,0,0,.28);cursor:pointer;user-select:none;}
+#historyBadge:hover{background:rgba(27,59,67,.96);}
+</style>
+<script src="qrc:///qtwebchannel/qwebchannel.js"></script>
+<script src="xterm.js"></script>
+<script src="xterm-addon-fit.js"></script>
+</head>
+<body>
+<div id="terminal"></div>
+<div id="historyBadge" title="Clic para volver al final"></div>
+<script>
+(function () {
+    'use strict';
+
+    let bridge = null;
+    let BASE_FONT_SIZE = 14;
+
+    let clipboardPrefs = {
+        auto_copy_selection: true,
+        ctrl_v_paste: true,
+        right_click_paste: true
+    };
+
+    window.setClipboardPreferences = function (prefs) {
+        prefs = prefs || {};
+        clipboardPrefs = {
+            auto_copy_selection:
+                prefs.auto_copy_selection !== false,
+            ctrl_v_paste:
+                prefs.ctrl_v_paste !== false,
+            right_click_paste:
+                prefs.right_click_paste !== false
+        };
+    };
+
+    const TERMINAL_THEMES = {
+      dark:{background:'#050607',foreground:'#d8dee9',cursor:'#f7f7f7',cursorAccent:'#050607',selectionBackground:'#315b68',black:'#2e3440',red:'#bf616a',green:'#a3be8c',yellow:'#ebcb8b',blue:'#81a1c1',magenta:'#b48ead',cyan:'#88c0d0',white:'#e5e9f0',brightBlack:'#707b8d',brightRed:'#d57780',brightGreen:'#b5cf9d',brightYellow:'#f0d79b',brightBlue:'#8faed0',brightMagenta:'#c39bc0',brightCyan:'#9bd0de',brightWhite:'#ffffff'},
+      glass:{background:'rgba(3, 8, 12, 0.56)',foreground:'#e8f0f4',cursor:'#ffffff',cursorAccent:'#071015',selectionBackground:'rgba(79,151,166,.58)',black:'#26323a',red:'#ff7b86',green:'#b6d99d',yellow:'#f3d58b',blue:'#9fc5ef',magenta:'#d1a7d4',cyan:'#9bdde7',white:'#ecf4f7',brightBlack:'#73818c',brightRed:'#ff9aa4',brightGreen:'#c9e8b4',brightYellow:'#ffe3a5',brightBlue:'#b7d7fa',brightMagenta:'#e0bae2',brightCyan:'#b7ebf1',brightWhite:'#ffffff'},
+      light:{background:'#f7f9fc',foreground:'#17212b',cursor:'#17212b',cursorAccent:'#f7f9fc',selectionBackground:'#b9dce6',black:'#17212b',red:'#b42318',green:'#256c3d',yellow:'#8a5a00',blue:'#1756b3',magenta:'#7b3f8c',cyan:'#0e6675',white:'#596875',brightBlack:'#5e6874',brightRed:'#d92d20',brightGreen:'#2f743f',brightYellow:'#8f5e00',brightBlue:'#2468c7',brightMagenta:'#9650a8',brightCyan:'#116d7e',brightWhite:'#26323d'},
+      coffee:{background:'#efe2cf',foreground:'#3a2a20',cursor:'#5a3b25',cursorAccent:'#efe2cf',selectionBackground:'#cfad84',black:'#2f251f',red:'#a43c2c',green:'#456b37',yellow:'#7d571a',blue:'#365f8d',magenta:'#754c78',cyan:'#386367',white:'#735f50',brightBlack:'#665446',brightRed:'#a33d2e',brightGreen:'#456b37',brightYellow:'#7a541a',brightBlue:'#365f8d',brightMagenta:'#754c78',brightCyan:'#39676a',brightWhite:'#3b3028'},
+      midnight:{background:'#07111f',foreground:'#d8e7f6',cursor:'#eef6ff',cursorAccent:'#07111f',selectionBackground:'#284f78',black:'#101923',red:'#e06c75',green:'#8fbc8f',yellow:'#d9b96e',blue:'#78a9d6',magenta:'#b692d0',cyan:'#7dc4cc',white:'#d8e7f6',brightBlack:'#65778a',brightRed:'#ef7d86',brightGreen:'#a5d2a5',brightYellow:'#e8cb83',brightBlue:'#94c0ea',brightMagenta:'#c9a9df',brightCyan:'#98d9df',brightWhite:'#ffffff'},
+      forest:{background:'#07130d',foreground:'#d9eadf',cursor:'#effff4',cursorAccent:'#07130d',selectionBackground:'#27583b',black:'#132019',red:'#dc706b',green:'#84ba88',yellow:'#d3b768',blue:'#78a9b7',magenta:'#b28bb2',cyan:'#74bbb0',white:'#d9eadf',brightBlack:'#64786a',brightRed:'#eb837e',brightGreen:'#9bd09f',brightYellow:'#e3ca7e',brightBlue:'#90becb',brightMagenta:'#c4a0c4',brightCyan:'#8dd0c5',brightWhite:'#ffffff'},
+      purple:{background:'#130b1b',foreground:'#eadff4',cursor:'#fff5ff',cursorAccent:'#130b1b',selectionBackground:'#55356f',black:'#201629',red:'#e17683',green:'#9cbd8b',yellow:'#d8b878',blue:'#8da6d9',magenta:'#c397d8',cyan:'#86bec9',white:'#eadff4',brightBlack:'#776985',brightRed:'#ef8995',brightGreen:'#b0d19e',brightYellow:'#e7ca8d',brightBlue:'#a4bcea',brightMagenta:'#d5ade7',brightCyan:'#9ed3dd',brightWhite:'#ffffff'},
+      sepia:{background:'#f0dfc4',foreground:'#3b2b20',cursor:'#5e3e27',cursorAccent:'#f0dfc4',selectionBackground:'#caa779',black:'#30261f',red:'#9e3d31',green:'#526b37',yellow:'#79581f',blue:'#3e6187',magenta:'#744f76',cyan:'#426365',white:'#715f50',brightBlack:'#665447',brightRed:'#ad4a3d',brightGreen:'#607c43',brightYellow:'#8b6828',brightBlue:'#4c7099',brightMagenta:'#855d87',brightCyan:'#507477',brightWhite:'#3b3028'}
+    };
+
+    const term = new Terminal({
+        cursorBlink: true,
+        cursorStyle: 'block',
+        cursorInactiveStyle: 'outline',
+        fontFamily: '"Cascadia Mono", "Cascadia Code", Consolas, monospace',
+        fontSize: BASE_FONT_SIZE,
+        lineHeight: 1.08,
+        letterSpacing: 0,
+        scrollback: 500000,
+        allowProposedApi: false,
+        allowTransparency: true,
+        convertEol: false,
+        windowsMode: false,
+
+        // Compatibilidad con Vim/Neovim/nano/less/top/htop/tmux/mc
+        customGlyphs: true,
+        drawBoldTextInBrightColors: true,
+        minimumContrastRatio: 1,
+        scrollOnUserInput: true,
+        scrollOnEraseInDisplay: true,
+        smoothScrollDuration: 0,
+        tabStopWidth: 8,
+
+        theme: TERMINAL_THEMES.dark
+    });
+
+    const fitAddon = new FitAddon.FitAddon();
+    term.loadAddon(fitAddon);
+    term.open(document.getElementById('terminal'));
+
+    window.term = term;
+
+    const historyBadge = document.getElementById('historyBadge');
+    let historyViewportLocked = false;
+
+    function updateHistoryState(viewportY) {
+        try {
+            const buffer = term.buffer.active;
+            const y = Number.isFinite(viewportY)
+                ? viewportY
+                : buffer.viewportY;
+            const distance = Math.max(0, buffer.baseY - y);
+
+            historyViewportLocked = (
+                buffer === term.buffer.normal &&
+                distance > 0
+            );
+
+            if (historyBadge) {
+                if (historyViewportLocked) {
+                    historyBadge.textContent =
+                        'HISTORIAL • ' +
+                        distance.toLocaleString() +
+                        ' líneas preservadas hasta el final • IR AL FINAL';
+                    historyBadge.style.display = 'block';
+                } else {
+                    historyBadge.style.display = 'none';
+                }
+            }
+        } catch (e) {
+            historyViewportLocked = false;
+        }
+    }
+
+    term.onScroll(function (viewportY) {
+        updateHistoryState(viewportY);
+    });
+
+    if (historyBadge) {
+        historyBadge.addEventListener('click', function () {
+            term.scrollToBottom();
+            updateHistoryState();
+            term.focus();
+        });
+    }
+
+    function captureHistoryMarker() {
+        try {
+            if (
+                !terminalInteractionPrefs.history_sticky ||
+                term.buffer.active !== term.buffer.normal ||
+                term.buffer.active.viewportY >= term.buffer.active.baseY
+            ) {
+                return null;
+            }
+
+            const buffer = term.buffer.active;
+            const absoluteCursorLine =
+                buffer.baseY + buffer.cursorY;
+            const offset =
+                buffer.viewportY - absoluteCursorLine;
+
+            return term.registerMarker(offset);
+        } catch (e) {
+            return null;
+        }
+    }
+
+    function restoreHistoryMarker(marker) {
+        try {
+            if (
+                marker &&
+                !marker.isDisposed &&
+                marker.line >= 0
+            ) {
+                term.scrollToLine(marker.line);
+            }
+        } catch (e) {
+        } finally {
+            try {
+                if (marker && !marker.isDisposed) {
+                    marker.dispose();
+                }
+            } catch (e) {}
+            updateHistoryState();
+        }
+    }
+
+    function preserveHistoryViewportAfter(callback) {
+        // Un resize de xterm (por fit/zoom) puede incrementar baseY cuando
+        // disminuye el número de filas. Si el usuario estaba viendo el final,
+        // viewportY puede quedar momentáneamente con el valor anterior y xterm
+        // aparenta haberse desplazado hacia el historial. Ese era el origen del
+        // prompt "flotando" en mitad de la pantalla después del zoom.
+        let wasNormalBuffer = false;
+        let wasAtBottom = false;
+        try {
+            const before = term.buffer.active;
+            wasNormalBuffer = before === term.buffer.normal;
+            wasAtBottom = (
+                wasNormalBuffer &&
+                before.viewportY >= before.baseY
+            );
+        } catch (e) {
+        }
+
+        // Sólo necesitamos un marker cuando el operador estaba leyendo
+        // historial de verdad. Si estaba al final, el ancla correcta es el
+        // final lógico del buffer, no una línea absoluta previa al resize.
+        const marker = wasAtBottom ? null : captureHistoryMarker();
+        callback();
+
+        if (wasAtBottom) {
+            const pinToLiveEnd = function () {
+                try {
+                    if (term.buffer.active === term.buffer.normal) {
+                        term.scrollToBottom();
+                    }
+                } catch (e) {
+                }
+                updateHistoryState();
+            };
+
+            // Primera corrección inmediatamente después de fit/resize y otra
+            // en el siguiente frame, cuando Chromium ya aplicó la geometría.
+            pinToLiveEnd();
+            requestAnimationFrame(pinToLiveEnd);
+        } else if (marker) {
+            requestAnimationFrame(function () {
+                restoreHistoryMarker(marker);
+            });
+        } else {
+            requestAnimationFrame(updateHistoryState);
+        }
+    }
+
+    let mobhectorSearchState = {query:'', lastY:-1};
+    window.mobhectorSearchTerminal = function(query, direction, caseSensitive){
+        query = String(query || '');
+        if (!query) return false;
+        direction = Number(direction) < 0 ? -1 : 1;
+        caseSensitive = !!caseSensitive;
+        try {
+            const buffer = term.buffer.active;
+            const total = buffer.length;
+            if (!total) return false;
+            if (mobhectorSearchState.query !== query) {
+                mobhectorSearchState.query = query;
+                mobhectorSearchState.lastY = -1;
+            }
+            const needle = caseSensitive ? query : query.toLowerCase();
+            let start = mobhectorSearchState.lastY;
+            if (start < 0 || start >= total) {
+                start = Math.max(0, Math.min(total - 1, buffer.viewportY));
+            }
+            for (let step = 1; step <= total; step++) {
+                const y = (start + direction * step + total) % total;
+                const lineObj = buffer.getLine(y);
+                if (!lineObj) continue;
+                const raw = lineObj.translateToString(true);
+                const haystack = caseSensitive ? raw : raw.toLowerCase();
+                const col = haystack.indexOf(needle);
+                if (col >= 0) {
+                    mobhectorSearchState.lastY = y;
+                    const top = Math.max(0, y - Math.floor(term.rows / 2));
+                    term.scrollToLine(top);
+                    try { term.select(col, y, Math.max(1, query.length)); } catch (e) {}
+                    updateHistoryState();
+                    term.focus();
+                    return true;
+                }
+            }
+        } catch (e) { console.error(e); }
+        return false;
+    };
+
+    window.mobhectorHistoryNavigate = function (action) {
+        action = String(action || '').toLowerCase();
+
+        if (action === 'pageup') {
+            term.scrollPages(-1);
+        } else if (action === 'pagedown') {
+            term.scrollPages(1);
+        } else if (action === 'top') {
+            term.scrollToTop();
+        } else if (action === 'bottom') {
+            term.scrollToBottom();
+        } else {
+            return false;
+        }
+
+        updateHistoryState();
+        term.focus();
+        return true;
+    };
+
+    window.setTerminalTheme = function(mode){
+      const selected=['dark','glass','light','coffee','midnight','forest','purple','sepia'].includes(mode)?mode:'dark';
+      document.documentElement.setAttribute('data-theme',selected);
+      if(selected==='light'){document.documentElement.style.setProperty('--page-bg','#f7f9fc');document.documentElement.style.setProperty('--viewport-bg','#edf2f6');document.documentElement.style.setProperty('--scroll-thumb','#a7b6c2');}
+      else if(selected==='coffee'){document.documentElement.style.setProperty('--page-bg','#efe2cf');document.documentElement.style.setProperty('--viewport-bg','#e4d3bc');document.documentElement.style.setProperty('--scroll-thumb','#aa8f71');}
+      else if(selected==='sepia'){document.documentElement.style.setProperty('--page-bg','#f0dfc4');document.documentElement.style.setProperty('--viewport-bg','#e2cba7');document.documentElement.style.setProperty('--scroll-thumb','#9e805f');}
+      else if(selected==='midnight'){document.documentElement.style.setProperty('--page-bg','#07111f');document.documentElement.style.setProperty('--viewport-bg','#0a1728');document.documentElement.style.setProperty('--scroll-thumb','#405a73');}
+      else if(selected==='forest'){document.documentElement.style.setProperty('--page-bg','#07130d');document.documentElement.style.setProperty('--viewport-bg','#0d1c13');document.documentElement.style.setProperty('--scroll-thumb','#43634d');}
+      else if(selected==='purple'){document.documentElement.style.setProperty('--page-bg','#130b1b');document.documentElement.style.setProperty('--viewport-bg','#1c1028');document.documentElement.style.setProperty('--scroll-thumb','#655077');}
+      else if(selected==='glass'){document.documentElement.style.setProperty('--page-bg','transparent');document.documentElement.style.setProperty('--viewport-bg','rgba(4,9,13,.28)');document.documentElement.style.setProperty('--scroll-thumb','rgba(126,161,174,.62)');}
+      else{document.documentElement.style.setProperty('--page-bg','#050607');document.documentElement.style.setProperty('--viewport-bg','#080a0d');document.documentElement.style.setProperty('--scroll-thumb','#3a4654');}
+      term.options.theme=TERMINAL_THEMES[selected];
+      requestAnimationFrame(function(){try{window.fitTerminal();term.refresh(0,Math.max(0,term.rows-1));term.focus();}catch(e){console.error(e);}});
+    };
+
+    let fitTimer = null;
+    let reportSizeTimer = null;
+    let lastReportedGeometry = '';
+
+    function reportSize() {
+        if (!bridge || !term.cols || !term.rows) {
+            return;
+        }
+
+        const el = document.getElementById('terminal');
+        const rect = el
+            ? el.getBoundingClientRect()
+            : {width: 0, height: 0};
+
+        const width = Math.max(
+            0,
+            Math.round(rect.width || 0)
+        );
+        const height = Math.max(
+            0,
+            Math.round(rect.height || 0)
+        );
+        const geometry = [
+            term.cols,
+            term.rows,
+            width,
+            height
+        ].join(':');
+
+        if (geometry === lastReportedGeometry) {
+            return;
+        }
+        lastReportedGeometry = geometry;
+
+        bridge.resize(
+            term.cols,
+            term.rows,
+            width,
+            height
+        );
+    }
+
+    function scheduleReportSize(delay) {
+        if (reportSizeTimer !== null) {
+            clearTimeout(reportSizeTimer);
+        }
+        reportSizeTimer = setTimeout(function () {
+            reportSizeTimer = null;
+            reportSize();
+        }, Math.max(0, Number(delay) || 0));
+    }
+
+    function scheduleFit(delay) {
+        if (fitTimer !== null) {
+            clearTimeout(fitTimer);
+        }
+        fitTimer = setTimeout(function () {
+            fitTimer = null;
+            window.fitTerminal();
+        }, Math.max(0, Number(delay) || 0));
+    }
+
+    window.fitTerminal = function () {
+        try {
+            preserveHistoryViewportAfter(function () {
+                fitAddon.fit();
+                scheduleReportSize(0);
+            });
+        } catch (e) {
+            console.error(e);
+        }
+    };
+
+    let terminalInteractionPrefs = {
+        click_to_cursor: true,
+        tui_native_mouse: true,
+        tui_arrow_fallback: true,
+        middle_click_paste: false,
+        show_scrollbar: true,
+        history_sticky: true,
+        protect_scrollback: true,
+        selection_autoscroll: true
+    };
+
+    // =========================================================
+    // Clear remoto: preservar explícitamente el viewport activo
+    // =========================================================
+    //
+    // Evidencia real del operador:
+    //   001..086 quedaron en scrollback
+    //   087..120 desaparecieron
+    //
+    // Esas 34 líneas corresponden al viewport activo. Por tanto ED2 estaba
+    // borrando la pantalla actual sin incorporarla al scrollback.
+    function buildPreservingClearSequence() {
+        const rows = Math.max(1, Number(term.rows) || 24);
+
+        // La última fila + LF provoca scroll real hacia el historial.
+        // Repetirlo por todas las filas conserva todo el viewport actual.
+        return (
+            '\x1b[' + rows + ';1H' +
+            '\n'.repeat(rows) +
+            '\x1b[H'
+        );
+    }
+
+    let protectedEraseCarry = '';
+    let protectedEraseCarryTimer = null;
+
+    const protectedErasePatterns = [
+        '\x1b[2J',
+        '\x1b[3J',
+        '\x9b2J',
+        '\x9b3J'
+    ];
+
+    function splitProtectedEraseCarry(value) {
+        const maxSize = Math.min(3, value.length);
+
+        for (let size = maxSize; size >= 1; size--) {
+            const suffix = value.slice(value.length - size);
+
+            if (
+                protectedErasePatterns.some(function (pattern) {
+                    return suffix !== pattern && pattern.startsWith(suffix);
+                })
+            ) {
+                return {
+                    body: value.slice(0, value.length - size),
+                    carry: suffix
+                };
+            }
+        }
+
+        return {body: value, carry: ''};
+    }
+
+    function transformProtectedEraseSequences(data) {
+        const combined = protectedEraseCarry + String(data || '');
+        protectedEraseCarry = '';
+
+        if (
+            !terminalInteractionPrefs.protect_scrollback ||
+            term.buffer.active !== term.buffer.normal
+        ) {
+            return combined;
+        }
+
+        const parts = splitProtectedEraseCarry(combined);
+        protectedEraseCarry = parts.carry;
+
+        let result = parts.body;
+
+        // ED3 = borrar scrollback -> bloquear.
+        result = result
+            .replace(/\x1b\[3J/g, '')
+            .replace(/\x9b3J/g, '');
+
+        // ED2 = borrar pantalla -> primero empujar viewport al scrollback.
+        result = result
+            .replace(/\x1b\[2J/g, function () {
+                return buildPreservingClearSequence();
+            })
+            .replace(/\x9b2J/g, function () {
+                return buildPreservingClearSequence();
+            });
+
+        return result;
+    }
+
+    function cancelProtectedEraseCarryTimer() {
+        if (protectedEraseCarryTimer) {
+            clearTimeout(protectedEraseCarryTimer);
+            protectedEraseCarryTimer = null;
+        }
+    }
+
+    function scheduleProtectedEraseCarryFlush() {
+        cancelProtectedEraseCarryTimer();
+
+        if (!protectedEraseCarry) {
+            return;
+        }
+
+        protectedEraseCarryTimer = setTimeout(function () {
+            const pending = protectedEraseCarry;
+            protectedEraseCarry = '';
+            protectedEraseCarryTimer = null;
+
+            if (pending) {
+                writeRemoteOutputRaw(pending);
+            }
+        }, 60);
+    }
+
+    // Fallback parser para ED3. ED2/ED3 se transforman principalmente
+    // antes de term.write() para preservar orden y contenido.
+    term.parser.registerCsiHandler(
+        {final: 'J'},
+        function (params) {
+            const first = (
+                Array.isArray(params[0])
+                ? params[0][0]
+                : params[0]
+            );
+            const ps = Number(first || 0);
+
+            if (
+                terminalInteractionPrefs.protect_scrollback &&
+                ps === 3
+            ) {
+                updateHistoryState();
+                return true;
+            }
+
+            return false;
+        }
+    );
+
+    window.setTerminalPreferences = function (prefs) {
+        prefs = prefs || {};
+
+        const family = String(
+            prefs.font_family || 'Cascadia Mono'
+        ).replace(/"/g, '');
+        BASE_FONT_SIZE = Math.max(
+            9,
+            Math.min(26, Number(prefs.font_size) || 14)
+        );
+
+        term.options.fontFamily =
+            '"' + family + '", "Cascadia Mono", Consolas, monospace';
+        term.options.cursorStyle = (
+            ['block','bar','underline'].includes(prefs.cursor_style)
+            ? prefs.cursor_style
+            : 'block'
+        );
+        term.options.cursorBlink = prefs.cursor_blink !== false;
+        term.options.scrollback = Math.max(
+            5000,
+            Math.min(1000000, Number(prefs.scrollback) || 500000)
+        );
+        term.options.lineHeight = Math.max(
+            0.90,
+            Math.min(1.60, (Number(prefs.line_height) || 108) / 100.0)
+        );
+        term.options.drawBoldTextInBrightColors =
+            prefs.bold_bright !== false;
+
+        terminalInteractionPrefs.click_to_cursor =
+            prefs.click_to_cursor !== false;
+        terminalInteractionPrefs.tui_native_mouse =
+            prefs.tui_native_mouse !== false;
+        terminalInteractionPrefs.tui_arrow_fallback =
+            prefs.tui_arrow_fallback !== false;
+        terminalInteractionPrefs.middle_click_paste =
+            prefs.middle_click_paste === true;
+        terminalInteractionPrefs.show_scrollbar =
+            prefs.show_scrollbar !== false;
+        terminalInteractionPrefs.history_sticky =
+            prefs.history_sticky !== false;
+        terminalInteractionPrefs.protect_scrollback =
+            prefs.protect_scrollback !== false;
+        terminalInteractionPrefs.selection_autoscroll =
+            prefs.selection_autoscroll !== false;
+
+        const bell = String(prefs.bell_style || 'none');
+        term.options.bellStyle = (
+            ['none','visual','sound'].includes(bell)
+            ? bell
+            : 'none'
+        );
+
+        const wordMode = String(prefs.word_mode || 'unix');
+        if (wordMode === 'spaces') {
+            term.options.wordSeparator = ' ';
+        } else if (wordMode === 'strict') {
+            term.options.wordSeparator = ' ()[]{}\'"`/\\:;=@,';
+        } else {
+            term.options.wordSeparator = ' ()[]{}\'"`,';
+        }
+
+        document.documentElement.setAttribute(
+            'data-scrollbar',
+            terminalInteractionPrefs.show_scrollbar ? 'true' : 'false'
+        );
+
+        requestAnimationFrame(function () {
+            try {
+                window.setTerminalZoom(
+                    Number(window.currentTerminalZoom || 100)
+                );
+                term.refresh(0, Math.max(0, term.rows - 1));
+            } catch (e) {
+                console.error(e);
+            }
+        });
+    };
+
+    let zoomFitGeneration = 0;
+    let zoomPinLiveEnd = false;
+
+    function pinZoomToLiveEnd(generation) {
+        if (
+            generation !== zoomFitGeneration ||
+            !zoomPinLiveEnd
+        ) {
+            return;
+        }
+        try {
+            if (term.buffer.active === term.buffer.normal) {
+                term.scrollToBottom();
+                updateHistoryState();
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    function fitAfterFontMetricsSettle(generation) {
+        if (generation !== zoomFitGeneration) return;
+        try {
+            // Si el zoom comenzó en el final lógico, mantenemos esa intención
+            // durante TODO el ciclo de ajuste. No recapturamos viewportY entre
+            // fits porque el primer resize puede crear un falso offset de
+            // historial al cambiar baseY.
+            if (zoomPinLiveEnd) {
+                fitAddon.fit();
+                pinZoomToLiveEnd(generation);
+                lastReportedGeometry = '';
+                scheduleReportSize(0);
+                term.refresh(0, Math.max(0, term.rows - 1));
+                requestAnimationFrame(function () {
+                    pinZoomToLiveEnd(generation);
+                });
+            } else {
+                preserveHistoryViewportAfter(function () {
+                    fitAddon.fit();
+                    lastReportedGeometry = '';
+                    scheduleReportSize(0);
+                    term.refresh(0, Math.max(0, term.rows - 1));
+                });
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    window.setTerminalZoom = function (percent) {
+        const p = Math.max(60, Math.min(220, Number(percent) || 100));
+
+        // Capturar ANTES de tocar fontSize. Esto es crítico: después de
+        // cambiar métricas, xterm puede modificar baseY al reducir filas y ya
+        // sería demasiado tarde para saber que estábamos en el final.
+        zoomPinLiveEnd = isNormalBufferAtBottom();
+
+        window.currentTerminalZoom = p;
+        zoomFitGeneration += 1;
+        const generation = zoomFitGeneration;
+
+        term.options.fontSize = BASE_FONT_SIZE * p / 100.0;
+        lastReportedGeometry = '';
+
+        requestAnimationFrame(function () {
+            if (generation !== zoomFitGeneration) return;
+            term.refresh(0, Math.max(0, term.rows - 1));
+            requestAnimationFrame(function () {
+                fitAfterFontMetricsSettle(generation);
+                setTimeout(function () {
+                    fitAfterFontMetricsSettle(generation);
+                    pinZoomToLiveEnd(generation);
+                    if (generation === zoomFitGeneration) term.focus();
+                }, 90);
+            });
+        });
+    };
+
+    function getCleanHeldClickEndSelectionText() {
+        if (!heldClickEndSelection) return '';
+        const buffer = term.buffer.normal;
+        if (!buffer) return '';
+
+        const startRow = Math.max(0, Number(heldClickEndSelection.row) || 0);
+        const startColumn = Math.max(0, Number(heldClickEndSelection.column) || 0);
+        const endRow = Math.max(
+            startRow,
+            Number(
+                heldClickEndSelection.endRow !== undefined
+                    ? heldClickEndSelection.endRow
+                    : startRow
+            ) || startRow
+        );
+        const endColumn = Math.max(
+            0,
+            Number(
+                heldClickEndSelection.endColumn !== undefined
+                    ? heldClickEndSelection.endColumn
+                    : term.cols
+            ) || 0
+        );
+
+        const parts = [];
+        for (let row = startRow; row <= endRow; row++) {
+            const line = buffer.getLine(row);
+            if (!line) continue;
+
+            const fromColumn = row === startRow
+                ? Math.min(term.cols, startColumn)
+                : 0;
+            const toColumn = row === endRow
+                ? Math.min(term.cols, endColumn)
+                : term.cols;
+
+            // trimRight=true quita padding visual de xterm, no espacios internos.
+            const value = line.translateToString(true, fromColumn, toColumn);
+
+            if (row > startRow && !line.isWrapped) {
+                parts.push('\n');
+            }
+            parts.push(value);
+        }
+        return parts.join('');
+    }
+
+    window.copyTerminalSelection = function () {
+        let text = '';
+        if (heldClickEndSelection) {
+            text = getCleanHeldClickEndSelectionText();
+        }
+        if (!text) {
+            text = term.getSelection();
+        }
+        if (text && bridge && bridge.copySelection) {
+            bridge.copySelection(text);
+        }
+    };
+
+    let lastPasteRequestAt = 0;
+
+    window.pasteTerminalClipboard = function () {
+        const now = performance.now();
+        if ((now - lastPasteRequestAt) < 45) {
+            return;
+        }
+        lastPasteRequestAt = now;
+
+        if (bridge && bridge.pasteClipboard) {
+            let bracketed = false;
+            try {
+                bracketed = !!(
+                    term.modes &&
+                    term.modes.bracketedPasteMode
+                );
+            } catch (e) {
+                bracketed = false;
+            }
+            bridge.pasteClipboard(bracketed);
+        }
+    };
+
+    // Teclas de terminal: xterm.js produce los bytes/ESC correctos en onData.
+    function looksLikeMouseReport(data) {
+        if (!data) return false;
+
+        // SGR mouse: CSI < button ; x ; y M/m
+        if (/^(?:\x1b\[<\d+;\d+;\d+[Mm])+$/.test(data)) {
+            return true;
+        }
+
+        // Legacy X10/VT200 prefix.
+        if (data.startsWith('\x1b[M')) {
+            return true;
+        }
+
+        return false;
+    }
+
+    // OSC 7: algunos shells informan su cwd como file://host/ruta.
+    // MobHector sólo reporta la ruta a Python; el SFTP decide si está dentro
+    // del home permitido. No se modifica .bashrc/.profile ni se ejecuta nada.
+    term.parser.registerOscHandler(7, function (data) {
+        try {
+            if (!bridge || !bridge.reportDirectory) return false;
+            const raw = String(data || '').trim();
+            if (!raw.toLowerCase().startsWith('file://')) return false;
+            let path = '';
+            try {
+                const parsed = new URL(raw);
+                path = decodeURIComponent(parsed.pathname || '');
+            } catch (e) {
+                const rest = raw.slice(7);
+                const slash = rest.indexOf('/');
+                path = slash >= 0 ? rest.slice(slash) : '';
+                try { path = decodeURIComponent(path); } catch (ignore) {}
+            }
+            if (path && path.startsWith('/')) {
+                bridge.reportDirectory(path);
+            }
+        } catch (e) {
+            console.error(e);
+        }
+        return false;
+    });
+
+    term.onData(function (data) {
+        if (!bridge) return;
+
+        // Mouse is always local to the active terminal. Never MultiExec.
+        if (looksLikeMouseReport(data) && bridge.localInput) {
+            bridge.localInput(data);
+            return;
+        }
+
+        bridge.input(data);
+    });
+
+    // xterm.js uses onBinary for some non-UTF8-compatible mouse reports.
+    term.onBinary(function (data) {
+        if (bridge && bridge.binaryInput) {
+            bridge.binaryInput(data);
+        }
+    });
+
+    term.onResize(function () {
+        scheduleReportSize(0);
+    });
+
+    // Comportamiento tipo terminal:
+    // Ctrl+C con selección => copiar.
+    // Ctrl+C sin selección => dejar que xterm envíe ^C.
+    // Ctrl+Shift+C => copiar siempre si hay selección.
+    // Ctrl+Shift+V => usar clipboard del navegador si está permitido.
+    window.mobhectorClearVisible = function () {
+        preserveHistoryViewportAfter(function () {
+            term.write(
+                buildPreservingClearSequence(),
+                updateHistoryState
+            );
+        });
+    };
+
+    term.attachCustomKeyEventHandler(function (ev) {
+        const key = (ev.key || '').toLowerCase();
+
+        // Segunda barrera de navegación local.
+        // La primera está en TerminalWebView, antes de Chromium.
+        if (
+            ev.shiftKey &&
+            !ev.ctrlKey &&
+            !ev.altKey &&
+            !ev.metaKey &&
+            (key === 'pageup' || key === 'pagedown')
+        ) {
+            return false;
+        }
+
+        if (
+            ev.ctrlKey &&
+            ev.shiftKey &&
+            !ev.altKey &&
+            !ev.metaKey &&
+            (key === 'home' || key === 'end')
+        ) {
+            return false;
+        }
+
+        // Segunda barrera del gesto clic izquierdo + Fin.
+        if (
+            key === 'end' &&
+            !ev.ctrlKey &&
+            !ev.shiftKey &&
+            !ev.altKey &&
+            !ev.metaKey &&
+            pointerDownState &&
+            pointerDownState.anchor
+        ) {
+            return false;
+        }
+
+        // Ctrl+Shift+C siempre copia si existe selección.
+        if (ev.ctrlKey && ev.shiftKey && key === 'c') {
+            if (ev.type === 'keydown' && term.hasSelection()) {
+                window.copyTerminalSelection();
+            }
+            return false;
+        }
+
+        // Ctrl+C con selección copia; sin selección continúa como ^C.
+        if (ev.ctrlKey && !ev.shiftKey && key === 'c') {
+            if (term.hasSelection()) {
+                if (ev.type === 'keydown') {
+                    window.copyTerminalSelection();
+                }
+                return false;
+            }
+            return true;
+        }
+
+        // El pegado de teclado se procesa sólo en el handler DOM de
+        // captura. Aquí únicamente impedimos una segunda ruta de xterm.
+        if (ev.ctrlKey && ev.shiftKey && key === 'v') {
+            return false;
+        }
+
+        if (
+            ev.ctrlKey &&
+            !ev.shiftKey &&
+            key === 'v' &&
+            clipboardPrefs.ctrl_v_paste
+        ) {
+            return false;
+        }
+
+        // Escape lo procesa el listener DOM de captura para garantizar
+        // un único 0x1B. ':' y el resto de teclas de Vim pasan normal.
+        if (
+            key === 'escape' &&
+            !ev.ctrlKey &&
+            !ev.altKey &&
+            !ev.metaKey
+        ) {
+            return false;
+        }
+
+        return true;
+    });
+
+    // Único dueño del pegado de teclado: fase DOM capture.
+    document.addEventListener(
+        'keydown',
+        function (ev) {
+            const key = (ev.key || '').toLowerCase();
+
+            // Clic izquierdo mantenido + Fin:
+            // selecciona desde el carácter pulsado hasta el final actual de
+            // toda la salida y baja al final. End normal queda intacto.
+            if (
+                key === 'end' &&
+                !ev.ctrlKey &&
+                !ev.shiftKey &&
+                !ev.altKey &&
+                !ev.metaKey &&
+                pointerDownState &&
+                pointerDownState.anchor
+            ) {
+                if (selectHeldClickToTerminalEnd()) {
+                    ev.preventDefault();
+                    ev.stopPropagation();
+                    if (ev.stopImmediatePropagation) {
+                        ev.stopImmediatePropagation();
+                    }
+                    return;
+                }
+            }
+
+            // Historial local: estas teclas no se envían al servidor.
+            if (ev.shiftKey && !ev.ctrlKey && !ev.altKey && !ev.metaKey && (key === 'pageup' || key === 'pagedown')) {
+                ev.preventDefault(); ev.stopPropagation();
+                if (ev.stopImmediatePropagation) ev.stopImmediatePropagation();
+                window.mobhectorHistoryNavigate(
+                    key === 'pageup' ? 'pageup' : 'pagedown'
+                );
+                return;
+            }
+            if (ev.ctrlKey && ev.shiftKey && !ev.altKey && !ev.metaKey && (key === 'home' || key === 'end')) {
+                ev.preventDefault(); ev.stopPropagation();
+                if (ev.stopImmediatePropagation) ev.stopImmediatePropagation();
+                window.mobhectorHistoryNavigate(
+                    key === 'home' ? 'top' : 'bottom'
+                );
+                return;
+            }
+
+            // Escape pertenece al terminal/Vim. Se envía exactamente un
+            // byte ESC (0x1B) y se cancela el evento nativo del navegador.
+            if (
+                key === 'escape' &&
+                !ev.ctrlKey &&
+                !ev.altKey &&
+                !ev.metaKey
+            ) {
+                ev.preventDefault();
+                ev.stopPropagation();
+                if (ev.stopImmediatePropagation) {
+                    ev.stopImmediatePropagation();
+                }
+
+                if (bridge) {
+                    bridge.input('\x1b');
+                }
+                term.focus();
+                return;
+            }
+
+            const managedCtrlV = (
+                ev.ctrlKey &&
+                !ev.shiftKey &&
+                key === 'v' &&
+                clipboardPrefs.ctrl_v_paste
+            );
+
+            const managedCtrlShiftV = (
+                ev.ctrlKey &&
+                ev.shiftKey &&
+                key === 'v'
+            );
+
+            if (!(managedCtrlV || managedCtrlShiftV)) {
+                return;
+            }
+
+            ev.preventDefault();
+            ev.stopPropagation();
+            if (ev.stopImmediatePropagation) {
+                ev.stopImmediatePropagation();
+            }
+
+            window.pasteTerminalClipboard();
+            term.focus();
+        },
+        true
+    );
+
+    // Si Chromium intenta emitir un paste residual después del atajo,
+    // evitar que el textarea oculto de xterm lo convierta en un segundo onData.
+    document.addEventListener(
+        'paste',
+        function (ev) {
+            if ((performance.now() - lastPasteRequestAt) < 300) {
+                ev.preventDefault();
+                ev.stopPropagation();
+                if (ev.stopImmediatePropagation) {
+                    ev.stopImmediatePropagation();
+                }
+            }
+        },
+        true
+    );
+
+    // Zoom Ctrl + rueda como PowerShell / Windows Terminal.
+    document.getElementById('terminal').addEventListener(
+        'wheel',
+        function (ev) {
+            if (ev.ctrlKey && bridge) {
+                ev.preventDefault();
+                ev.stopPropagation();
+                if (ev.stopImmediatePropagation) {
+                    ev.stopImmediatePropagation();
+                }
+                bridge.requestZoom(ev.deltaY < 0 ? 1 : -1);
+                return false;
+            }
+        },
+        {passive: false, capture: true}
+    );
+
+    const terminalElement = document.getElementById('terminal');
+
+    // Mouse: foco, selección y click-to-cursor seguro.
+    let pointerDownState = null;
+    let selectionDragPointer = null;
+    let selectionAutoScrollTimer = null;
+
+    // Gesto especial: mantener clic izquierdo + Fin selecciona desde el
+    // carácter pulsado hasta el final lógico actual del buffer normal.
+    let heldClickEndSelection = null;
+
+    function stopSelectionAutoScroll() {
+        if (selectionAutoScrollTimer) {
+            clearInterval(selectionAutoScrollTimer);
+            selectionAutoScrollTimer = null;
+        }
+        selectionDragPointer = null;
+    }
+
+    function selectionAutoScrollStep() {
+        if (!pointerDownState || !selectionDragPointer || !terminalInteractionPrefs.selection_autoscroll) return;
+        if (hasNativeMouseTracking() && !selectionDragPointer.shiftKey) return;
+        const screen = terminalElement.querySelector('.xterm-screen');
+        if (!screen) return;
+        const rect = screen.getBoundingClientRect();
+        const y = selectionDragPointer.clientY;
+        const edge = Math.max(22, Math.min(48, rect.height * 0.08));
+        let delta = 0;
+        if (y <= rect.top + edge) {
+            const pressure = Math.min(1, Math.max(0, (rect.top + edge - y) / edge));
+            delta = -(1 + Math.round(pressure * 4));
+        } else if (y >= rect.bottom - edge) {
+            const pressure = Math.min(1, Math.max(0, (y - (rect.bottom - edge)) / edge));
+            delta = 1 + Math.round(pressure * 4);
+        }
+        if (!delta) return;
+        term.scrollLines(delta);
+        updateHistoryState();
+        const x = Math.max(rect.left + 2, Math.min(rect.right - 2, selectionDragPointer.clientX));
+        const edgeY = delta < 0 ? rect.top + 2 : rect.bottom - 2;
+        const synthetic = new MouseEvent('mousemove', {
+            bubbles:true,cancelable:true,view:window,buttons:1,button:0,
+            clientX:x,clientY:edgeY,shiftKey:!!selectionDragPointer.shiftKey
+        });
+        try { Object.defineProperty(synthetic, '_mobhectorAutoScroll', {value:true}); } catch (e) {}
+        terminalElement.dispatchEvent(synthetic);
+    }
+
+    function startSelectionAutoScroll() {
+        if (selectionAutoScrollTimer || !terminalInteractionPrefs.selection_autoscroll) return;
+        selectionAutoScrollTimer = setInterval(selectionAutoScrollStep, 45);
+    }
+
+    document.addEventListener('mousemove', function (ev) {
+        if (ev._mobhectorAutoScroll || !pointerDownState || !(ev.buttons & 1)) return;
+        selectionDragPointer = {clientX:ev.clientX, clientY:ev.clientY, shiftKey:ev.shiftKey};
+    }, true);
+    document.addEventListener('mouseup', function (ev) {
+        if (ev.button === 0) stopSelectionAutoScroll();
+    }, true);
+    window.addEventListener('blur', function () {
+        stopSelectionAutoScroll();
+        pointerDownState = null;
+        heldClickEndSelection = null;
+    });
+
+    function isNormalBufferAtBottom() {
+        try {
+            const buffer = term.buffer;
+            return (
+                buffer &&
+                buffer.active === buffer.normal &&
+                buffer.active.viewportY === buffer.active.baseY
+            );
+        } catch (e) {
+            return false;
+        }
+    }
+
+    function isAlternateBuffer() {
+        try {
+            return (
+                term.buffer &&
+                term.buffer.active === term.buffer.alternate
+            );
+        } catch (e) {
+            return false;
+        }
+    }
+
+    function activeMouseTrackingMode() {
+        try {
+            return (
+                term.modes &&
+                term.modes.mouseTrackingMode
+            ) || 'none';
+        } catch (e) {
+            return 'none';
+        }
+    }
+
+    function hasNativeMouseTracking() {
+        return activeMouseTrackingMode() !== 'none';
+    }
+
+    function cursorSequence(direction) {
+        let finalChar = 'A';
+        if (direction === 'down') finalChar = 'B';
+        else if (direction === 'right') finalChar = 'C';
+        else if (direction === 'left') finalChar = 'D';
+
+        const applicationMode = (
+            term.modes &&
+            term.modes.applicationCursorKeysMode
+        );
+
+        return applicationMode
+            ? '\x1bO' + finalChar
+            : '\x1b[' + finalChar;
+    }
+
+    function clickTargetColumn(ev) {
+        const screen = terminalElement.querySelector('.xterm-screen');
+        if (!screen || !term.cols) return null;
+
+        const rect = screen.getBoundingClientRect();
+        if (
+            rect.width <= 0 ||
+            ev.clientX < rect.left ||
+            ev.clientX > rect.right
+        ) {
+            return null;
+        }
+
+        const cellWidth = rect.width / term.cols;
+        return Math.max(
+            0,
+            Math.min(
+                term.cols - 1,
+                Math.floor((ev.clientX - rect.left) / cellWidth)
+            )
+        );
+    }
+
+    function clickTargetRow(ev) {
+        const screen = terminalElement.querySelector('.xterm-screen');
+        if (!screen || !term.rows) return null;
+
+        const rect = screen.getBoundingClientRect();
+        if (
+            rect.height <= 0 ||
+            ev.clientY < rect.top ||
+            ev.clientY > rect.bottom
+        ) {
+            return null;
+        }
+
+        const cellHeight = rect.height / term.rows;
+        return Math.max(
+            0,
+            Math.min(
+                term.rows - 1,
+                Math.floor((ev.clientY - rect.top) / cellHeight)
+            )
+        );
+    }
+
+    function captureHeldClickAnchor(ev) {
+        if (ev.button !== 0) return null;
+
+        const visibleRow = clickTargetRow(ev);
+        const column = clickTargetColumn(ev);
+        if (visibleRow === null || column === null) return null;
+
+        const buffer = term.buffer.active;
+        if (!buffer || buffer !== term.buffer.normal) return null;
+
+        return {
+            column: column,
+            row: buffer.viewportY + visibleRow,
+            bufferType: 'normal'
+        };
+    }
+
+    function selectHeldClickToTerminalEnd() {
+        if (
+            !pointerDownState ||
+            !pointerDownState.anchor ||
+            pointerDownState.anchor.bufferType !== 'normal'
+        ) {
+            return false;
+        }
+
+        const buffer = term.buffer.active;
+        if (!buffer || buffer !== term.buffer.normal) return false;
+
+        const startColumn = Math.max(
+            0,
+            Math.min(term.cols - 1, Number(pointerDownState.anchor.column) || 0)
+        );
+        const startRow = Math.max(0, Number(pointerDownState.anchor.row) || 0);
+
+        // Fin lógico actual del terminal: posición absoluta del cursor remoto.
+        const endRow = Math.max(0, buffer.baseY + buffer.cursorY);
+        const endColumn = Math.max(
+            0,
+            Math.min(term.cols, Number(buffer.cursorX) || 0)
+        );
+
+        if (
+            endRow < startRow ||
+            (endRow === startRow && endColumn <= startColumn)
+        ) {
+            return false;
+        }
+
+        // API pública xterm.js: select(col, row, length). La longitud lineal
+        // puede atravesar todas las filas intermedias del buffer.
+        const length = (
+            (endRow - startRow) * term.cols + endColumn - startColumn
+        );
+        if (!Number.isFinite(length) || length <= 0) return false;
+
+        heldClickEndSelection = {
+            column: startColumn,
+            row: startRow,
+            length: length,
+            endRow: endRow,
+            endColumn: endColumn
+        };
+        pointerDownState.specialEndUsed = true;
+
+        stopSelectionAutoScroll();
+        term.select(
+            heldClickEndSelection.column,
+            heldClickEndSelection.row,
+            heldClickEndSelection.length
+        );
+        term.scrollToBottom();
+        updateHistoryState();
+        term.focus();
+        return true;
+    }
+
+    function restoreHeldClickEndSelection() {
+        if (!heldClickEndSelection) return;
+        try {
+            term.select(
+                heldClickEndSelection.column,
+                heldClickEndSelection.row,
+                heldClickEndSelection.length
+            );
+            term.scrollToBottom();
+            updateHistoryState();
+            term.focus();
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    function sendLocalCursorDelta(rowDelta, colDelta) {
+        if (!bridge || !bridge.localInput) return;
+
+        rowDelta = Math.max(-500, Math.min(500, rowDelta));
+        colDelta = Math.max(-500, Math.min(500, colDelta));
+
+        let seq = '';
+
+        if (rowDelta < 0) {
+            seq += cursorSequence('up').repeat(-rowDelta);
+        } else if (rowDelta > 0) {
+            seq += cursorSequence('down').repeat(rowDelta);
+        }
+
+        if (colDelta < 0) {
+            seq += cursorSequence('left').repeat(-colDelta);
+        } else if (colDelta > 0) {
+            seq += cursorSequence('right').repeat(colDelta);
+        }
+
+        if (seq) {
+            bridge.localInput(seq);
+        }
+    }
+
+    function maybePositionCursorFromClick(ev, downState) {
+        if (!bridge || !bridge.localInput) return;
+        if (ev.button !== 0) return;
+        if (ev.ctrlKey || ev.altKey || ev.shiftKey || ev.metaKey) return;
+        if (!downState) return;
+
+        const movement = Math.hypot(
+            ev.clientX - downState.x,
+            ev.clientY - downState.y
+        );
+
+        if (movement > 6 || term.hasSelection()) {
+            return;
+        }
+
+        const row = clickTargetRow(ev);
+        const col = clickTargetColumn(ev);
+        if (row === null || col === null) return;
+
+        const buffer = term.buffer.active;
+        const currentRow = buffer.cursorY;
+        const currentCol = buffer.cursorX;
+
+        // =====================================================
+        // Vim / TUI alternate screen
+        // =====================================================
+        if (isAlternateBuffer()) {
+            // If Vim/TUI requested mouse tracking, xterm.js already sends
+            // the real click. Do not synthesize arrow keys as well.
+            if (
+                terminalInteractionPrefs.tui_native_mouse &&
+                hasNativeMouseTracking()
+            ) {
+                return;
+            }
+
+            if (!terminalInteractionPrefs.tui_arrow_fallback) {
+                return;
+            }
+
+            let rowDelta = row - currentRow;
+
+            // In Vim the last terminal row is commonly ':' command-line.
+            // Avoid vertical history movement from that row.
+            if (
+                currentRow >= (term.rows - 1) &&
+                row !== currentRow
+            ) {
+                rowDelta = 0;
+            }
+
+            sendLocalCursorDelta(
+                rowDelta,
+                col - currentCol
+            );
+            term.focus();
+            return;
+        }
+
+        // =====================================================
+        // Shell prompt
+        // =====================================================
+        if (!terminalInteractionPrefs.click_to_cursor) {
+            return;
+        }
+
+        if (!isNormalBufferAtBottom()) {
+            return;
+        }
+
+        if (row !== currentRow) {
+            return;
+        }
+
+        sendLocalCursorDelta(
+            0,
+            col - currentCol
+        );
+        term.focus();
+    }
+
+    terminalElement.addEventListener('mousedown', function (ev) {
+        term.focus();
+
+        // Do not prevent/stop left mouse: xterm.js needs the native event
+        // when Vim/TUI enabled mouse tracking.
+        if (ev.button === 0) {
+            heldClickEndSelection = null;
+            pointerDownState = {
+                x: ev.clientX,
+                y: ev.clientY,
+                anchor: captureHeldClickAnchor(ev),
+                specialEndUsed: false
+            };
+            selectionDragPointer = {
+                clientX: ev.clientX,
+                clientY: ev.clientY,
+                shiftKey: ev.shiftKey
+            };
+            startSelectionAutoScroll();
+        }
+
+        if (
+            ev.button === 1 &&
+            terminalInteractionPrefs.middle_click_paste
+        ) {
+            ev.preventDefault();
+        }
+    });
+
+    terminalElement.addEventListener('mouseup', function (ev) {
+        const downState = pointerDownState;
+        if (ev.button === 0) {
+            pointerDownState = null;
+            stopSelectionAutoScroll();
+        }
+
+        setTimeout(function () {
+            if (
+                ev.button === 0 &&
+                downState &&
+                downState.specialEndUsed &&
+                heldClickEndSelection
+            ) {
+                // xterm también finaliza una selección en mouseup. Reaplicar
+                // después garantiza que el rango especial llegue al final.
+                // No se autocopia: con 500K/1M líneas podría ser enorme.
+                // Ctrl+C/Ctrl+Shift+C copia cuando el operador lo decida.
+                restoreHeldClickEndSelection();
+                return;
+            }
+
+            if (ev.button === 0 && term.hasSelection()) {
+                if (clipboardPrefs.auto_copy_selection) {
+                    window.copyTerminalSelection();
+                }
+                return;
+            }
+
+            if (ev.button === 0) {
+                maybePositionCursorFromClick(ev, downState);
+            }
+        }, 0);
+    });
+
+    terminalElement.addEventListener('auxclick', function (ev) {
+        if (
+            ev.button === 1 &&
+            terminalInteractionPrefs.middle_click_paste
+        ) {
+            ev.preventDefault();
+            ev.stopPropagation();
+            window.pasteTerminalClipboard();
+            term.focus();
+        }
+    });
+
+    // Clic derecho configurable = pegar.
+    // Shift + clic derecho deja disponible el menú contextual normal.
+    terminalElement.addEventListener('contextmenu', function (ev) {
+        if (
+            clipboardPrefs.right_click_paste &&
+            !ev.shiftKey
+        ) {
+            ev.preventDefault();
+            ev.stopPropagation();
+            window.pasteTerminalClipboard();
+            term.focus();
+        }
+    });
+
+    // Ajustar al contenedor cuando el dock/tabs cambian de tamaño.
+    const observer = new ResizeObserver(function () {
+        scheduleFit(45);
+    });
+    observer.observe(document.getElementById('terminal'));
+
+    function writeRemoteOutputRaw(data) {
+        if (!data) {
+            return;
+        }
+
+        const marker = captureHistoryMarker();
+
+        term.write(data, function () {
+            if (marker) {
+                restoreHistoryMarker(marker);
+            } else {
+                updateHistoryState();
+            }
+        });
+    }
+
+    function writeRemoteOutput(data) {
+        cancelProtectedEraseCarryTimer();
+
+        const transformed = transformProtectedEraseSequences(data);
+
+        if (transformed) {
+            writeRemoteOutputRaw(transformed);
+        }
+
+        scheduleProtectedEraseCarryFlush();
+    }
+
+    new QWebChannel(qt.webChannelTransport, function (channel) {
+        bridge = channel.objects.bridge;
+
+        bridge.output.connect(function (data) {
+            writeRemoteOutput(data);
+            // Ordered callback only acknowledges bytes consumed by xterm's parser.
+            term.write('', function () { bridge.outputAck(data.length); });
+        });
+
+        bridge.disconnected.connect(function (reason) {
+            term.write(
+                '\r\n\x1b[38;5;203m[SSH] ' +
+                String(reason || 'sesión cerrada') +
+                '\x1b[0m\r\n'
+            );
+        });
+
+        window.fitTerminal();
+        term.focus();
+        bridge.ready();
+    });
+
+    window.addEventListener('load', function () {
+        setTimeout(window.fitTerminal, 50);
+        setTimeout(() => term.focus(), 100);
+    });
+})();
+</script>
+</body>
+</html>

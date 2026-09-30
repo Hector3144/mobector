@@ -1,0 +1,31 @@
+MOBHECTOR 1.2.14 - TERMINAL FEATURE PARITY
+=============================================
+
+Local Shell comparte las funciones de terminal con SSH:
+
+- MultiExec SSH+SSH, SSH+Local y Local+Local
+- teclado sincronizado
+- pegado MultiExec una sola vez por destino
+- bracketed paste evaluado en CADA destino
+- historial 500K / 1M
+- protección contra clear
+- Shift+PageUp/PageDown
+- selección larga/autoscroll
+- clic izquierdo + Fin
+- copiar/pegar
+- zoom
+- temas y Glass
+- preferencias de terminal en vivo
+- pantalla completa y Zen
+- Ctrl+R:
+    SSH = reconectar
+    Local = reiniciar ConPTY
+- Ctrl+Shift+D desacoplar/reacoplar
+- arrastrar pestaña para desacoplar
+- Local Shell desacoplado conserva el mismo ConPTY/xterm
+- mismo TerminalWidget/xterm.js
+
+NO APLICA A LOCAL SHELL
+-----------------------
+SFTP, editor remoto, credenciales SSH y host-key requieren un host remoto;
+son funciones SSH/SFTP, no funciones del terminal.

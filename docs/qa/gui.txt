@@ -1,0 +1,4 @@
+Entorno: Linux, Qt 6.11.2, WebEngine offscreen, PTY falso.
+GUI_SMOKE PASS: Qt startup, xterm, 18000 lines, UTF-8, ACK, keyboard, 3 reparent cycles, shutdown
+Captura inspeccionada: terminal_18000_lineas.png
+El contenedor de pruebas requiere --no-sandbox para Chromium bajo root. Esta opción NO se añade al producto ni a los lanzadores Windows.

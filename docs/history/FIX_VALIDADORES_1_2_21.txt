@@ -1,0 +1,18 @@
+MOBHECTOR 1.2.21 - FIX DE VALIDADORES DEL UPDATER
+===================================================
+
+Problema:
+El updater ejecutaba validadores heredados de 1.2.17/1.2.18/1.2.19.
+Uno de ellos todavía exigía el experimento eliminado:
+    target_sftp_attempt
+
+En 1.2.21 ese comportamiento fue eliminado intencionalmente.
+
+Diseño válido 1.2.21:
+    Terminal = Platon + su - usuario destino
+    SFTP     = identidad Platon
+    Ruta     = HOME del usuario destino
+
+Este FIX no modifica el core ni las funciones de MobHector.
+Sólo actualiza los validadores heredados para comprobar compatibilidad
+con el diseño actual y evitar rollback falso.

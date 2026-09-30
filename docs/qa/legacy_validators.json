@@ -1,0 +1,182 @@
+[
+  {
+    "validator": "validar_advanced_settings_v1_2_0.py",
+    "returncode": 0,
+    "output": "[OK] version\n[OK] click_setting\n[OK] middle_paste_setting\n[OK] bell_setting\n[OK] scrollbar_setting\n[OK] tab_position_setting\n[OK] detach_setting\n[OK] ssh_compression\n[OK] auto_reconnect\n[OK] sftp_hidden\n[OK] bridge_local_input\n[OK] local_not_multiexec\n[OK] normal_buffer_guard\n[OK] bottom_guard\n[OK] same_row_guard\n[OK] click_arrow_left\n[OK] click_arrow_right\n[OK] drag_guard\n[OK] middle_paste\n[OK] bell_runtime\n[OK] word_runtime\n[OK] scrollbar_runtime\n[OK] auto_reconnect_timer\n[OK] compression_runtime\n[OK] tab_runtime\n[OK] detach_runtime\n[OK] multiexec_confirm\n[OK] ctrlv_hotfix\n[OK] hostkey_security\n\\nADVANCED SETTINGS QA: OK\n"
+  },
+  {
+    "validator": "validar_auditoria_v1_2_6.py",
+    "returncode": 0,
+    "output": "[OK] version_126\n[OK] module_doc_version\n[OK] no_duplicate_defs\n[OK] one_remote_join\n[OK] delete_last_session_stays_empty\n[OK] malformed_session_isolated\n[OK] session_port_sanitized\n[OK] remote_name_validation\n[OK] remote_join_child_safe\n[OK] app_sftp_enoent_classifier\n[OK] go_inbox_reuses_safe_mkdir\n[OK] refresh_stale_error_guard\n[OK] refresh_skips_dot_entries\n[OK] transfer_enoent_classifier\n[OK] transfer_path_traversal_guard\n[OK] transfer_permission_not_hidden\n[OK] python_fit_debounce\n[OK] reader_retirement\n[OK] js_geometry_dedupe\n[OK] js_resize_observer_debounce\n[OK] no_direct_resize_observer_fit\n[OK] scrollback_500k_default\n[OK] scrollback_1m_max\n[OK] protect_scrollback_default\n[OK] ed3_protected\n[OK] ed2_kept\n[OK] no_term_clear_api\n[OK] visible_clear_keeps_history\n[OK] marker_based_history_anchor\n[OK] no_absolute_history_anchor\n[OK] history_badge_is_distance\n[OK] multiexec_paste\n[OK] selection_autoscroll\n[OK] private_glass_only_when_needed\n[OK] vim_escape\n[OK] vim_mouse\n[OK] ctrlv_single_paste\n[OK] hostkey_security\n\nAUDITORIA 1.2.6: OK\n"
+  },
+  {
+    "validator": "validar_clear_preservation_v1_2_7.py",
+    "returncode": 0,
+    "output": "[OK] version\n[OK] builder\n[OK] all_rows_lf\n[OK] bottom_cursor\n[OK] ed2\n[OK] ed3\n[OK] c1_ed2\n[OK] c1_ed3\n[OK] prefilter\n[OK] chunk_safe\n[OK] local_safe\n[OK] no_term_clear_call\n[OK] markers\n[OK] 500k\n[OK] 1m\n[OK] evidence_120_of_120\nEVIDENCE MODEL: 86 old + 34 visible = 120/120\n\\nCLEAR PRESERVE QA: OK\n"
+  },
+  {
+    "validator": "validar_clipboard_v1_0_1.py",
+    "returncode": 0,
+    "output": "[OK] mobhector_version_present\n[OK] capture_keydown\n[OK] capture_true\n[OK] prevent_default\n[OK] stop_propagation\n[OK] stop_immediate\n[OK] paste_residual_guard\n[OK] js_dedupe\n[OK] py_dedupe\n[OK] qt_clipboard\n[OK] right_click\n[OK] custom_handler_single_owner\n\\nCLIPBOARD QA: OK\n"
+  },
+  {
+    "validator": "validar_detach_fix_v1_3_4.py",
+    "returncode": 0,
+    "output": "[OK] python_syntax\n[OK] version_134\n[OK] detached_window_class\n[OK] detached_toolbar_no_main_context_handler\n[OK] detached_toolbar_movable\n[OK] detach_transaction_try\n[OK] detach_restores_tab_on_error\n[OK] detach_rollback_reactivate\n[OK] detach_error_visible\n[OK] detach_registry_cleanup\n[OK] ssh_and_local_supported\n[OK] reattach_preserved\n[OK] close_detached_preserved\nDETACH FIX QA: OK (13 checks)\n"
+  },
+  {
+    "validator": "validar_fresh_defaults_v1_2_2.py",
+    "returncode": 0,
+    "output": "[OK] version\n[OK] zero_sessions\n[OK] blank_name\n[OK] blank_host\n[OK] blank_username\n[OK] port_22\n[OK] auto_home\n[OK] auto_inbox\n[OK] no_old_host\n[OK] no_old_user\n[OK] empty_sessions_valid\n[OK] normalize_login_home\n[OK] default_inbox_under_home\n[OK] mkdir_p\n[OK] auto_create\n[OK] resolve_during_connect\n[OK] resolved_home_runtime\n[OK] resolved_inbox_runtime\n[OK] browser_effective_home\n[OK] browser_effective_inbox\n[OK] port_dialog\n[OK] runtime_sanitized\n\\nFRESH DEFAULTS QA: OK\n"
+  },
+  {
+    "validator": "validar_history_integrity_v1_2_6.py",
+    "returncode": 0,
+    "output": "[OK] version\n[OK] default_500k\n[OK] max_1m\n[OK] protect_default\n[OK] protect_ui\n[OK] protect_runtime_py\n[OK] protect_runtime_js\n[OK] ed3_parser_hook\n[OK] ed3_consumed\n[OK] ed2_preserved\n[OK] clear_api_removed\n[OK] visual_clear_ed2\n[OK] marker_capture\n[OK] marker_register\n[OK] marker_restore\n[OK] absolute_anchor_removed\n[OK] output_uses_marker\n[OK] fit_uses_marker\n[OK] badge_clear_wording\n[OK] resize_dedup\n[OK] resize_debounce\n\nHISTORY INTEGRITY QA: OK\n"
+  },
+  {
+    "validator": "validar_history_keys_v1_2_8.py",
+    "returncode": 0,
+    "output": "[OK] version\n[OK] module_version\n[OK] qt_webview\n[OK] signal\n[OK] pageup\n[OK] pagedown\n[OK] home\n[OK] end\n[OK] press_intercept\n[OK] release_intercept\n[OK] specialized_view\n[OK] qt_local_handler\n[OK] js_history_api\n[OK] xterm_barrier\n[OK] dom_barrier\n[OK] clear_preserve\n[OK] markers\n[OK] no_explicit_esc5_send\n[OK] vim_escape\n[OK] hostkey\n\\nHISTORY KEYS QA: OK\n"
+  },
+  {
+    "validator": "validar_instalador_full_v1_3_4.py",
+    "returncode": 0,
+    "output": "[OK] version\n[OK] private_runtime\n[OK] per_user_python\n[OK] no_system_path_python\n[OK] pip_requirements\n[OK] pyside_paramiko_qa\n[OK] xterm_bundled\n[OK] python_signature\n[OK] full_manifest\n[OK] qa_after_install\n[OK] user_path\n[OK] desktop_shortcut\n[OK] ruster_alias\n[OK] no_execution_policy_change\n[OK] uninstall_preserves_appdata\n[OK] no_packaged_config\n[OK] no_packaged_known_hosts\nFULL INSTALLER 1.4.0 QA: OK (17 checks)\n"
+  },
+  {
+    "validator": "validar_integrated_local_shell_v1_2_13.py",
+    "returncode": 0,
+    "output": "[OK] version\n[OK] conpty\n[OK] local_connection\n[OK] same_terminal\n[OK] no_external_window\n[OK] button\n[OK] powershell_cmd\n[OK] shortcut\n[OK] appearance\n[OK] preferences\n[OK] history\n[OK] vim_paste\n[OK] portable_hresult\n[OK] security\n\\nINTEGRATED LOCAL SHELL QA: OK\n"
+  },
+  {
+    "validator": "validar_left_hold_end_v1_2_9.py",
+    "returncode": 0,
+    "output": "[OK] version\n[OK] anchor\n[OK] absolute_row\n[OK] normal_only\n[OK] select_func\n[OK] logical_end\n[OK] linear_length\n[OK] xterm_select\n[OK] scroll_bottom\n[OK] end_guard\n[OK] mouseup_restore\n[OK] no_mass_autocopy\n[OK] click_cursor\n[OK] autoscroll\n[OK] history_keys\n[OK] clear_fix\n[OK] vim_mouse\n[OK] vim_escape\n[OK] multiexec\n[OK] glass\n[OK] hostkey\n[OK] math_model\nSELECTION MODEL: 10/20 -> 30/5 = 1985 cells\n\nLEFT-HOLD+END QA: OK\n"
+  },
+  {
+    "validator": "validar_local_shell_v1_2_11.py",
+    "returncode": 0,
+    "output": "[OK] version\n[OK] launcher\n[OK] powershell\n[OK] cmd\n[OK] integrated_conpty\n[OK] integrated_tab\n[OK] no_external_wt\n[OK] no_saved_ssh_session\n[OK] security\n\nLOCAL SHELL REGRESSION QA: OK\n"
+  },
+  {
+    "validator": "validar_local_shell_visible_v1_2_12.py",
+    "returncode": 0,
+    "output": "[OK] version\n[OK] sessions_button\n[OK] button_below_session_list\n[OK] dropdown\n[OK] powershell\n[OK] cmd\n[OK] shortcut\n[OK] integrated\n[OK] no_external_terminal\n\nLOCAL SHELL UI REGRESSION QA: OK\n"
+  },
+  {
+    "validator": "validar_multiexec_history_v1_2_5.py",
+    "returncode": 0,
+    "output": "[OK] version\n[OK] default_500k\n[OK] max_1m_py\n[OK] max_1m_ui\n[OK] max_1m_js\n[OK] migration\n[OK] sticky\n[OK] badge\n[OK] history_keys\n[OK] autoscroll\n[OK] paste_signal\n[OK] paste_local_once\n[OK] paste_emit\n[OK] paste_handler\n[OK] paste_status\n[OK] ctrlv\n[OK] vim_escape\n[OK] vim_mouse\n[OK] glass\n[OK] hostkey\n\nMULTIEXEC/HISTORY QA: OK\n"
+  },
+  {
+    "validator": "validar_platon_default_sftp_home_v1_2_22.py",
+    "returncode": 0,
+    "output": "[OK] version\n[OK] parser\n[OK] button\n[OK] none_auth\n[OK] terminal_su\n[OK] default_sftp\n[OK] saved_mode\n[OK] saved_connector\n[OK] endpoint_only\n[OK] windows_credential\n[OK] no_target_sftp\n[OK] no_direct_tcpip\n[OK] security\n[OK] no_duplicate_methods\n\nPLATON 1.2.22 COMPAT: OK\n"
+  },
+  {
+    "validator": "validar_platon_session_v1_2_15.py",
+    "returncode": 0,
+    "output": "[OK] version\n[OK] parser\n[OK] button\n[OK] none_auth\n[OK] terminal_su\n[OK] default_sftp\n[OK] saved_mode\n[OK] saved_connector\n[OK] endpoint_only\n[OK] windows_credential\n[OK] no_target_sftp\n[OK] no_direct_tcpip\n[OK] security\n[OK] no_duplicate_methods\n\nPLATON 1.2.15 COMPAT: OK\n"
+  },
+  {
+    "validator": "validar_platon_sftp_after_su_v1_2_19.py",
+    "returncode": 0,
+    "output": "[OK] version\n[OK] parser\n[OK] button\n[OK] none_auth\n[OK] terminal_su\n[OK] default_sftp\n[OK] saved_mode\n[OK] saved_connector\n[OK] endpoint_only\n[OK] windows_credential\n[OK] no_target_sftp\n[OK] no_direct_tcpip\n[OK] security\n[OK] no_duplicate_methods\n\nPLATON 1.2.19 COMPAT: OK\n"
+  },
+  {
+    "validator": "validar_platon_su_hardened_v1_2_18.py",
+    "returncode": 0,
+    "output": "[OK] version\n[OK] parser\n[OK] button\n[OK] none_auth\n[OK] terminal_su\n[OK] default_sftp\n[OK] saved_mode\n[OK] saved_connector\n[OK] endpoint_only\n[OK] windows_credential\n[OK] no_target_sftp\n[OK] no_direct_tcpip\n[OK] security\n[OK] no_duplicate_methods\n\nPLATON 1.2.18 COMPAT: OK\n"
+  },
+  {
+    "validator": "validar_platon_su_path_only_v1_2_21.py",
+    "returncode": 0,
+    "output": "[OK] version\n[OK] parser\n[OK] button\n[OK] none_auth\n[OK] terminal_su\n[OK] default_sftp\n[OK] saved_mode\n[OK] saved_connector\n[OK] endpoint_only\n[OK] windows_credential\n[OK] no_target_sftp\n[OK] no_direct_tcpip\n[OK] security\n[OK] no_duplicate_methods\n\nPLATON 1.2.21 COMPAT: OK\n"
+  },
+  {
+    "validator": "validar_platon_su_v1_2_17.py",
+    "returncode": 0,
+    "output": "[OK] version\n[OK] parser\n[OK] button\n[OK] none_auth\n[OK] terminal_su\n[OK] default_sftp\n[OK] saved_mode\n[OK] saved_connector\n[OK] endpoint_only\n[OK] windows_credential\n[OK] no_target_sftp\n[OK] no_direct_tcpip\n[OK] security\n[OK] no_duplicate_methods\n\nPLATON 1.2.17 COMPAT: OK\n"
+  },
+  {
+    "validator": "validar_platon_target_home_v1_2_20.py",
+    "returncode": 0,
+    "output": "[OK] version\n[OK] parser\n[OK] button\n[OK] none_auth\n[OK] terminal_su\n[OK] default_sftp\n[OK] saved_mode\n[OK] saved_connector\n[OK] endpoint_only\n[OK] windows_credential\n[OK] no_target_sftp\n[OK] no_direct_tcpip\n[OK] security\n[OK] no_duplicate_methods\n\nPLATON 1.2.20 COMPAT: OK\n"
+  },
+  {
+    "validator": "validar_platon_user_jump_v1_2_16.py",
+    "returncode": 0,
+    "output": "[OK] version\n[OK] parser\n[OK] button\n[OK] none_auth\n[OK] terminal_su\n[OK] default_sftp\n[OK] saved_mode\n[OK] saved_connector\n[OK] endpoint_only\n[OK] windows_credential\n[OK] no_target_sftp\n[OK] no_direct_tcpip\n[OK] security\n[OK] no_duplicate_methods\n\nPLATON 1.2.16 COMPAT: OK\n"
+  },
+  {
+    "validator": "validar_productividad_v1_3_0.py",
+    "returncode": 0,
+    "output": "[OK] version_130\n[OK] quick_connect\n[OK] quick_commands\n[OK] startup_command\n[OK] terminal_search\n[OK] transcript\n[OK] safe_export\n[OK] safe_import\n[OK] no_new_daemon_bind\n[OK] credential_store_preserved\n[OK] known_hosts_preserved\nPRODUCTIVITY 1.3.1 QA: OK\n"
+  },
+  {
+    "validator": "validar_productividad_v1_3_1.py",
+    "returncode": 0,
+    "output": "[OK] python_syntax\n[OK] version_132_compatible\n[OK] quick_connect_preserved\n[OK] startup_command_preserved\n[OK] folders_favorites_preserved\n[OK] terminal_search_preserved\n[OK] transcripts_preserved\n[OK] safe_export_preserved\n[OK] compose_bar_widget\n[OK] compose_shortcut\n[OK] compose_current\n[OK] compose_multiexec\n[OK] compose_no_double_broadcast\n[OK] compose_risk_guard\n[OK] snippets_dock\n[OK] snippets_shortcut\n[OK] snippets_insert\n[OK] snippets_run_current\n[OK] snippets_run_multiexec\n[OK] local_wsl\n[OK] local_git_bash\n[OK] local_same_conpty\n[OK] local_menu_wsl\n[OK] local_menu_git\n[OK] osc7_parser\n[OK] osc7_bridge\n[OK] osc7_terminal_signal\n[OK] sftp_follow_setting\n[OK] sftp_follow_handler\n[OK] sftp_follow_home_guard\n[OK] no_shell_profile_modification\n[OK] no_new_listener\n[OK] credential_manager_preserved\n[OK] known_hosts_preserved\n[OK] multiexec_preserved\n[OK] platon_preserved\nPRODUCTIVITY FUSION 1.3.1 QA: OK (36 checks)\n"
+  },
+  {
+    "validator": "validar_remote_windows_icons_v1_3_4.py",
+    "returncode": 0,
+    "output": "[OK] python_syntax\n[OK] qfileiconprovider_import\n[OK] qfileinfo_import\n[OK] shell_icon_provider\n[OK] remote_icon_cache\n[OK] extension_cache_key\n[OK] extension_probe\n[OK] provider_icon_lookup\n[OK] folder_icon\n[OK] file_icon\n[OK] tree_item_icon\n[OK] remote_name_interactive\n[OK] local_name_interactive\nREMOTE WINDOWS ICONS 1.3.4 QA: OK (13 checks)\n"
+  },
+  {
+    "validator": "validar_saved_platon_profiles_v1_2_23.py",
+    "returncode": 0,
+    "output": "[OK] version\n[OK] config_mode\n[OK] save_checkbox\n[OK] profile_name\n[OK] save_helper\n[OK] saved_auth_mode\n[OK] stable_profile_host\n[OK] password_windows\n[OK] endpoint_dialog\n[OK] read_password_windows\n[OK] runtime_target_user\n[OK] runtime_outer_temp_user\n[OK] runtime_temp_port\n[OK] connect_dispatch\n[OK] session_list\n[OK] edit_dialog\n[OK] delete_credential\n[OK] default_sftp_home\n[OK] no_target_home_force\n[OK] security\n[OK] no_duplicate_methods\n\nSAVED PLATON PROFILES QA: OK\n"
+  },
+  {
+    "validator": "validar_settings_v1_1_0.py",
+    "returncode": 0,
+    "output": "[OK] version\n[OK] general_dialog\n[OK] appearance_expanded\n[OK] accent\n[OK] density\n[OK] terminal_font\n[OK] terminal_cursor\n[OK] terminal_scrollback\n[OK] terminal_runtime_apply\n[OK] ssh_keepalive\n[OK] ssh_timeouts\n[OK] worker_threads\n[OK] confirm_close\n[OK] settings_menu\n[OK] config_folder\n[OK] log_folder\n[OK] reset_preserves_sessions\n[OK] terminal_themes\n[OK] terminal_preferences_js\n[OK] ctrlv_fix_preserved\n\\nSETTINGS QA: OK\n"
+  },
+  {
+    "validator": "validar_terminal_glass_v1_2_4.py",
+    "returncode": 0,
+    "output": "[OK] version\n[OK] terminal_backdrop\n[OK] private_glass\n[OK] glass_config\n[OK] live_all_terminals\n[OK] detached_sync\n[OK] webengine_transparent\n[OK] html_glass\n[OK] vim_escape\n[OK] clipboard\n[OK] vim_mouse\n[OK] security\n\\nTERMINAL GLASS QA: OK\n"
+  },
+  {
+    "validator": "validar_terminal_parity_v1_2_14.py",
+    "returncode": 0,
+    "output": "[OK] version\n[OK] one_current_terminal_def\n[OK] terminal_collection\n[OK] ssh_local_collection\n[OK] multiexec_generic\n[OK] local_input_wired\n[OK] local_paste_wired\n[OK] target_bracketed_paste\n[OK] paste_uses_target\n[OK] local_ctrl_r\n[OK] local_context_detach\n[OK] drag_detach_local\n[OK] direct_detach_local\n[OK] detached_local_restart\n[OK] reattach_local_safe\n[OK] preferences_all\n[OK] appearance_all\n[OK] shutdown_all\n[OK] same_xterm\n[OK] history\n[OK] selection\n[OK] clipboard\n[OK] vim_tui\n[OK] glass\n[OK] security\n[OK] no_duplicate_methods\n\\nTERMINAL PARITY QA: OK\n"
+  },
+  {
+    "validator": "validar_transferencias.py",
+    "returncode": 0,
+    "output": "OK: motor de transferencias MobHector\nOK: progreso final 100% sólo tras publicar destino\nOK: canal SFTP dedicado por transferencia\nOK: temporales .part se limpian\nOK: reemplazo local/remoto validado\nOK: archivo vacío, grande, Unicode/espacios y carpeta recursiva\nOK: colisión archivo/directorio remoto bloqueada sin pérdida de datos\nOK: fallos inyectados conservan destino anterior y limpian temporales\n"
+  },
+  {
+    "validator": "validar_ui_zoom_startup_v1_3_2.py",
+    "returncode": 0,
+    "output": "[OK] python_syntax\n[OK] version_132\n[OK] ssh_zoom_minus_visible\n[OK] ssh_zoom_plus_visible\n[OK] ssh_zoom_reset_visible\n[OK] zoom_plus_calls_in\n[OK] zoom_minus_calls_out\n[OK] zoom_reset_calls_reset\n[OK] toolbar_zoom_plus_compact\n[OK] toolbar_zoom_minus_compact\n[OK] local_zoom_controls\n[OK] zoom_generation_guard\n[OK] zoom_double_animation_frame\n[OK] zoom_delayed_refit\n[OK] zoom_forces_geometry_report\n[OK] zoom_backend_resize_preserved\n[OK] zoom_refresh_after_fit\n[OK] startup_visible_button\n[OK] startup_reopen_dialog\n[OK] startup_global_shortcut\n[OK] startup_session_menu\n[OK] startup_signal\n[OK] startup_persist_helper\n[OK] startup_persist_index\n[OK] startup_saved_platon_persist\n[OK] startup_next_connect_message\n[OK] startup_empty_disables\n[OK] no_autoaddpolicy\n[OK] known_hosts\n[OK] credential_manager\n[OK] no_listener_0000\nUI ZOOM + STARTUP 1.3.4 QA: OK (31 checks)\n"
+  },
+  {
+    "validator": "validar_updater_final_v1_3_4.py",
+    "returncode": 0,
+    "output": "...................\n----------------------------------------------------------------------\nRan 19 tests in 0.109s\n\nOK\n"
+  },
+  {
+    "validator": "validar_vim_copy_paste_v1_2_10.py",
+    "returncode": 0,
+    "output": "[OK] version\n[OK] clean_special_copy\n[OK] buffer_reader\n[OK] trim_padding\n[OK] wrapped_lines\n[OK] saved_end\n[OK] normal_fallback\n[OK] bracketed_detect\n[OK] bool_slot\n[OK] bp_start\n[OK] bp_end\n[OK] newline_norm\n[OK] multiexec_clean\n[OK] toolbar_js\n[OK] dedupe\n[OK] left_end\n[OK] clear\n[OK] history\n[OK] vim_escape\n[OK] vim_mouse\n[OK] hostkey\nVIM COPY/PASTE QA: OK\n"
+  },
+  {
+    "validator": "validar_vim_escape_v1_2_3.py",
+    "returncode": 0,
+    "output": "[OK] version_123\n[OK] no_plain_esc_application_shortcut\n[OK] no_shortcut_escape_member\n[OK] immersive_ctrl_shift_esc\n[OK] dom_escape_capture\n[OK] escape_prevent_default\n[OK] escape_stop_propagation\n[OK] escape_return_after_send\n[OK] colon_not_special_cased\n[OK] ctrlv_single_paste\n[OK] vim_mouse_preserved\n[OK] hostkey_security\n\nVIM ESC/WQ QA: OK\n"
+  },
+  {
+    "validator": "validar_vim_mouse_v1_2_1.py",
+    "returncode": 0,
+    "output": "[OK] version\n[OK] native_default\n[OK] fallback_default\n[OK] native_ui\n[OK] fallback_ui\n[OK] binary_slot\n[OK] binary_raw\n[OK] onBinary\n[OK] mouse_report_local\n[OK] mouse_tracking\n[OK] native_guard\n[OK] alternate_fallback\n[OK] app_cursor_keys\n[OK] vertical_arrows\n[OK] horizontal_arrows\n[OK] cmdline_guard\n[OK] selection_guard\n[OK] shell_same_row\n[OK] ctrlv_fix\n[OK] hostkey_safe\n\\nVIM/TUI MOUSE QA: OK\n"
+  },
+  {
+    "validator": "validar_zoom_viewport_v1_3_3.py",
+    "returncode": 0,
+    "output": "[OK] python_syntax\n[OK] version_133\n[OK] capture_before_fontsize\n[OK] zoom_live_end_state\n[OK] zoom_live_end_helper\n[OK] zoom_scroll_bottom\n[OK] zoom_generation_guard\n[OK] fit_live_end_branch\n[OK] history_branch_preserved\n[OK] generic_fit_captures_bottom\n[OK] generic_fit_pins_bottom\n[OK] history_marker_only_when_needed\n[OK] double_frame_kept\n[OK] delayed_refit_kept\n[OK] pty_resize_kept\n[OK] startup_access_kept\n[OK] zoom_plus_kept\n[OK] zoom_minus_kept\nZOOM VIEWPORT 1.3.4 QA: OK (18 checks)\n"
+  }
+]

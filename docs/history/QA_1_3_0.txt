@@ -1,0 +1,39 @@
+MOBHECTOR 1.3.0 - QA / SEGURIDAD
+================================
+
+BASE
+- Construido sobre MobHector 1.2.23 SAVED PLATON PROFILES UPDATE ONLY.
+- No modifica credential_store.py, host_key_store.py ni transfer_engine.py.
+
+NUEVO VALIDADO
+- Quick Connect temporal.
+- Comandos rápidos / snippets.
+- Startup command por sesión.
+- Búsqueda de scrollback Ctrl+F/F3/Shift+F3.
+- Transcript manual de terminal.
+- Favoritos y grupo/carpeta de sesiones.
+- Exportación/importación de sesiones sin secretos.
+
+REGRESIÓN ESTÁTICA APROBADA
+- Transferencias SFTP.
+- Historial y preservación de clear.
+- MultiExec.
+- Vim/TUI/mouse/copy-paste.
+- Local Shell / ConPTY.
+- Glass y preferencias de terminal.
+- Platon 1.2.15 -> 1.2.23, incluidos perfiles guardados.
+- Seguridad host key / known_hosts.
+
+SEGURIDAD
+- No se incorporaron daemons FTP/TFTP/Telnet/HTTP/NFS/VNC.
+- No se agregó listener 0.0.0.0.
+- Quick Connect no persiste la sesión ni el password.
+- Exportar sesiones elimina credential_id y nunca incluye password/ssh_password.
+- Importar sesiones fuerza remember_password=false y genera credential_id nuevo.
+- El actualizador mantiene manifiesto SHA-256, backup y rollback.
+
+NOTA DE ENTORNO DE CONSTRUCCIÓN
+El QA general del paquete fuente no puede ejecutar PySide6/Paramiko ni comprobar
+xterm.js/xterm.css/xterm-addon-fit.js porque esos componentes pertenecen al runtime
+privado/instalación Windows y no están presentes en este contenedor Linux. El updater
+valida esos componentes sobre C:\Users\<usuario>\bin\MobHectorRuntime antes de copiar.

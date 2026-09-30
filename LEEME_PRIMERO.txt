@@ -1,0 +1,17 @@
+MOBHECTOR 1.4.0 — WINDOWS x64
+
+1. Extrae todo el ZIP en una carpeta nueva.
+2. Cierra MobHector.
+3. Ejecuta instalar_o_actualizar.bat.
+4. Abre MobHector desde el acceso directo o el comando mobhector.
+
+No extraigas el paquete directamente dentro de la instalación existente.
+La instalación nueva necesita Internet para Python y dependencias.
+La actualización conserva sesiones, known_hosts y credenciales.
+
+Cancelar transferencias: Ver cola > Cancelar seleccionada.
+Consulta README.md y docs/REVISION_1.4.0.md para mejoras y limitaciones.
+
+Validado con Qt/WebEngine y SSH/SFTP de prueba en Linux.
+Instalador Windows, ConPTY, Credential Manager y Ruster/Platón reales:
+pendientes de prueba en tu equipo. No es una certificación de seguridad.

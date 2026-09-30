@@ -1,0 +1,10 @@
+MobHector 1.3.2 - QA objetivo
+============================
+- Python syntax
+- xterm.js zoom geometry/refit
+- resize_pty synchronization
+- visible +/-/100% controls in SSH and Local Shell
+- Startup Command reopen/edit/persist
+- saved Platon persistence metadata without endpoint persistence
+- legacy productivity, terminal, SFTP, transfer, clipboard, Vim/TUI, MultiExec and Platon validators
+- updater manifest + rollback + final version verification

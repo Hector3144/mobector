@@ -1,0 +1,21 @@
+MobHector 1.3.2 - Zoom Geometry + Startup Access Fix
+=====================================================
+
+1. Zoom de terminal corregido
+- Botones visibles de alejar (-), acercar (+) y restablecer (100%) dentro de cada terminal SSH.
+- Los mismos controles también están disponibles en Local Shell.
+- Los controles globales de la toolbar ahora usan símbolos compactos para evitar que el botón + quede oculto por falta de ancho.
+- El cambio de fuente espera a que xterm.js recalcule las métricas de caracteres antes de ejecutar fit().
+- Se hace re-fit en dos frames y una verificación tardía, y luego se sincroniza resize_pty con columnas, filas y dimensiones reales.
+
+2. Startup Command accesible desde la sesión activa
+- Nuevo botón "Inicio" en la cabecera de cada sesión SSH.
+- "Inicio ●" indica que hay un Startup Command configurado.
+- Se puede abrir, modificar o desactivar sin cerrar ni recrear la sesión.
+- En sesiones guardadas el cambio se persiste en config.json.
+- En perfiles Platon guardados se conserva la referencia segura del perfil sin persistir endpoints temporales.
+- En Quick Connect/Platon temporal el cambio queda sólo en la pestaña actual.
+
+3. Seguridad y compatibilidad
+- No se agregan listeners ni servicios de red.
+- Se conserva Windows Credential Manager, known_hosts, Platon, SFTP, MultiExec, Vim/TUI, ConPTY y rollback.

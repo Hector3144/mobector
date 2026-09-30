@@ -1,0 +1,49 @@
+MOBHECTOR 1.2.15 - PLATON SSH + SFTP
+=======================================
+
+NUEVO BOTON
+-----------
+Panel Sesiones:
+
+    [+ SSH] [⚡ Platon] [>_ Local ▼] [Conectar]
+
+USO
+---
+Pulsa ⚡ Platon y pega el comando temporal:
+
+    ssh.exe -l Hc9KlZsXWs -p 61386 127.0.0.1
+
+MobHector extrae:
+    Usuario = Hc9KlZsXWs
+    Host    = 127.0.0.1
+    Puerto  = 61386
+
+CONEXION
+--------
+- Verifica host-key con el mismo mecanismo seguro de MobHector.
+- Usa autenticación SSH "none", sin contraseña.
+- Abre SFTP.
+- Resuelve el home real mediante SFTP normalize(".").
+- Crea una pestaña SessionTerminal normal.
+- Intenta abrir PTY/shell sobre el mismo transporte.
+- Muestra el filesystem en SFTP / Archivos.
+
+La pestaña participa en las funciones comunes de una sesión SSH:
+    MultiExec
+    historial
+    selección
+    copy/paste
+    Vim/TUI si el endpoint permite shell
+    zoom
+    Glass
+    detach/reattach
+    transferencias SFTP
+
+IMPORTANTE
+----------
+Los endpoints de Platon son temporales. La sesión NO se agrega a config.json.
+
+Si un endpoint concreto de Platon sólo expone el subsistema SFTP y rechaza
+shell interactivo, el panel SFTP seguirá conectado pero la terminal mostrará
+que ese endpoint no permite PTY/shell. En ese caso se requiere el endpoint
+de consola que Platon entregue para la parte terminal.

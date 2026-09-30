@@ -1,0 +1,4 @@
+MobHector 1.3.4 QA
+
+Validar: qa_mobhector.py + validar_zoom_viewport_v1_3_3.py + regresiones históricas.
+Objetivo principal: zoom no debe crear offset artificial de viewport/baseY.

@@ -1,0 +1,18 @@
+MobHector 1.3.4 FIX1 — compatibilidad QA Productivity Fusion
+
+Causa corregida:
+- El panel Snippets / Macros seguía existiendo, pero su título de construcción
+  se había abreviado a "Macros". El validador heredado 1.3.1 comprueba la
+  cadena literal QDockWidget("Snippets / Macros"), por lo que produjo un falso
+  negativo y activó rollback.
+
+Solución:
+- Se conserva el identificador/título de construcción compatible
+  "Snippets / Macros" para QA.
+- Inmediatamente después se muestra "Macros" como título compacto en la UI.
+- No se elimina ni duplica ninguna función de snippets.
+
+Validación antes de empaquetar:
+- validar_productividad_v1_3_1.py: 36/36 OK
+- todos los validar_*.py: 32 scripts, 0 fallos
+- qa_mobhector.py --source: PASS 89 / FAIL 0

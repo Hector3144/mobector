@@ -1,0 +1,43 @@
+MOBHECTOR 1.3.1 - PRODUCTIVITY FUSION
+=====================================
+
+Fusión del Moba Productivity Pack con las funciones añadidas en el desarrollo
+paralelo, sin eliminar Quick Connect, búsqueda, transcripts, startup commands,
+import/export seguro, Platon, MultiExec, ConPTY, Vim/TUI ni SFTP.
+
+1. COMPOSE BAR
+   - Ctrl+Shift+P enfoca la barra.
+   - Enter / Enviar => terminal actual.
+   - Botón ⚡ => terminales activas de MultiExec.
+   - El envío MultiExec usa una ruta directa announce=False para no duplicarse.
+   - Comandos de alto riesgo (rm -rf, mkfs, reboot, lvremove, etc.) exigen confirmación.
+
+2. SNIPPETS / MACROS
+   - Ctrl+Shift+B muestra/oculta el dock.
+   - Doble clic / Ejecutar => terminal actual.
+   - Insertar => carga en Compose sin ejecutar; bloques multilínea pasan por buffer
+     de revisión y portapapeles para evitar ejecución accidental.
+   - ⚡ => envío controlado a destinos activos de MultiExec.
+
+3. LOCAL SHELL
+   - PowerShell, CMD, WSL y Git Bash.
+   - Todos reutilizan Windows ConPTY + el mismo xterm.js de MobHector.
+   - WSL/Git Bash muestran error claro si no están instalados.
+
+4. SFTP FOLLOW TERMINAL FOLDER
+   - Soporte OSC 7 en xterm.js/WebChannel.
+   - No modifica .bashrc, .profile, .zshrc ni archivos del servidor.
+   - Sólo sigue rutas absolutas dentro del home permitido por SFTP.
+   - En Platon + su, rutas fuera del home SFTP de Platon se ignoran silenciosamente.
+   - Opción global para activar/desactivar en Preferencias > Sesiones / SFTP.
+
+5. FUNCIONES PRESERVADAS
+   - Carpetas/grupos y favoritos.
+   - Startup command.
+   - Quick Connect.
+   - Búsqueda en terminal y transcripts.
+   - Import/export sin secretos.
+   - Windows Credential Manager y known_hosts.
+   - MultiExec, Platon, Vim/TUI, Glass, detach/reattach y transferencias seguras.
+
+DEPENDENCIAS NUEVAS: NINGUNA.

@@ -1,0 +1,7 @@
+MOBHECTOR 1.2.10
+
+- Clic+Fin copia sin padding visual de xterm.
+- Conserva espacios internos reales.
+- Respeta líneas wrapped.
+- Vim/TUI usa bracketed paste cuando lo solicita.
+- MultiExec no recibe wrappers bracketed.

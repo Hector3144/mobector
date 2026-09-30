@@ -1,0 +1,25 @@
+test_cancel_before_start_has_no_side_effects (test_release.ReleaseTests.test_cancel_before_start_has_no_side_effects) ... ok
+test_cancel_download_preserves_destination (test_release.ReleaseTests.test_cancel_download_preserves_destination) ... ok
+test_cancel_upload_preserves_destination (test_release.ReleaseTests.test_cancel_upload_preserves_destination) ... ok
+test_download_cannot_follow_existing_symlink (test_release.ReleaseTests.test_download_cannot_follow_existing_symlink) ... ok
+test_editor_lossless_utf8_bom_newlines (test_release.ReleaseTests.test_editor_lossless_utf8_bom_newlines) ... ok
+test_editor_rejects_invalid_binary_mixed (test_release.ReleaseTests.test_editor_rejects_invalid_binary_mixed) ... ok
+test_host_key_tofu_and_injection (test_release.ReleaseTests.test_host_key_tofu_and_injection) ... ok
+test_import_bounded (test_release.ReleaseTests.test_import_bounded) ... ok
+test_import_invalid_types_ports (test_release.ReleaseTests.test_import_invalid_types_ports) ... ok
+test_import_rejects_all_before_mutation (test_release.ReleaseTests.test_import_rejects_all_before_mutation) ... ok
+test_import_strips_secrets_and_commands_and_deduplicates (test_release.ReleaseTests.test_import_strips_secrets_and_commands_and_deduplicates) ... ok
+test_manifest_traversal_duplicate_missing (test_release.ReleaseTests.test_manifest_traversal_duplicate_missing) ... ok
+test_update_rollback_restores_old_and_removes_new (test_release.ReleaseTests.test_update_rollback_restores_old_and_removes_new) ... ok
+test_update_success_and_hash_rejection (test_release.ReleaseTests.test_update_success_and_hash_rejection) ... ok
+test_windows_case_collision_rejected_before_write (test_release.ReleaseTests.test_windows_case_collision_rejected_before_write) ... ok
+test_windows_names (test_release.ReleaseTests.test_windows_names) ... ok
+test_writer_error_and_stop (test_release.ReleaseTests.test_writer_error_and_stop) ... ok
+test_writer_nonblocking_order_and_bound (test_release.ReleaseTests.test_writer_nonblocking_order_and_bound) ... ok
+test_writer_partial_send_and_timeout_no_duplicate (test_release.ReleaseTests.test_writer_partial_send_and_timeout_no_duplicate) ... ok
+test_real_roundtrip_and_dedicated_channel (test_sftp_integration.RealSFTPTests.test_real_roundtrip_and_dedicated_channel) ... ok
+
+----------------------------------------------------------------------
+Ran 20 tests in 1.535s
+
+OK

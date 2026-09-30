@@ -1,0 +1,108 @@
+====================================================================
+MobHector 1.4.0 - QA / AUDITORIA AUTOMATIZADA
+====================================================================
+[OK]   archivo mobhector.pyw
+[OK]   archivo transfer_engine.py
+[OK]   archivo credential_store.py
+[OK]   archivo host_key_store.py
+[OK]   archivo assets/terminal.html
+[OK]   archivo requirements.txt
+[OK]   archivo mobhector.bat
+[OK]   sintaxis Python mobhector.pyw
+[OK]   sintaxis transfer_engine.py
+[OK]   sintaxis credential_store.py
+[OK]   sintaxis host_key_store.py
+[OK]   marca MobHector
+[OK]   versión 1.4.0
+[OK]   autor HECTOR PEREZ
+[OK]   alias SGNaomi
+[OK]   firma ASCII -       |\      _,,,---,,_
+[OK]   firma ASCII - ZZZzz /,`.-'`'    -.  ;-;;,_
+[OK]   firma ASCII -      |,4-  ) )-,_. ,\ (  `'-'
+[OK]   firma ASCII -     '---''(_/--'  `-'\_)  SGNaomi
+[OK]   sin AutoAddPolicy
+[OK]   host key TOFU explícito
+[OK]   known_hosts atómico
+[OK]   config escritura atómica
+[OK]   config persiste credential_id migrado
+[OK]   config elimina password plano
+[OK]   Credential Manager Windows
+[OK]   GUI dispatcher enqueued
+[OK]   workers retenidos globalmente
+[OK]   SFTP dedicado por transferencia
+[OK]   TerminalReader bloqueante
+[OK]   health transport <= 1Hz reader
+[OK]   salida terminal agrupada
+[OK]   buffer xterm O(1)
+[OK]   filtro SFTP debounce
+[OK]   refresh SFTP descarta resultados obsoletos
+[OK]   upload temporal remoto
+[OK]   download os.replace
+[OK]   100% sólo después de publish
+[OK]   bloquea archivo sobre directorio remoto
+[OK]   PTY xterm-256color
+[OK]   UTF-8 incremental
+[OK]   resize PTY con píxeles
+[OK]   reconexión R/Q
+[OK]   MultiExec
+[OK]   detach drag mouse
+[OK]   WebEngine reactivate
+[OK]   clipboard Qt nativo
+[OK]   tema aplicación independiente
+[OK]   tema aplicación dark
+[OK]   tema aplicación light
+[OK]   tema aplicación coffee
+[OK]   tema aplicación glass
+[OK]   QSS café claro
+[OK]   terminal.html TERMINAL_THEMES
+[OK]   terminal.html customGlyphs: true
+[OK]   terminal.html scrollOnEraseInDisplay: true
+[OK]   terminal.html window.setTerminalTheme
+[OK]   terminal.html window.setClipboardPreferences
+[OK]   terminal.html getBoundingClientRect()
+[OK]   terminal.html coffee:
+[OK]   terminal.html light:
+[OK]   terminal.html glass:
+[OK]   terminal.html dark:
+[OK]   contraste texto principal dark - 15.01:1
+[OK]   contraste ANSI dark - >=4.5:1
+[OK]   contraste texto principal light - 15.45:1
+[OK]   contraste ANSI light - >=4.5:1
+[OK]   contraste texto principal coffee - 10.74:1
+[OK]   contraste ANSI coffee - >=4.5:1
+[OK]   sintaxis JavaScript terminal
+OK: motor de transferencias MobHector
+OK: progreso final 100% sólo tras publicar destino
+OK: canal SFTP dedicado por transferencia
+OK: temporales .part se limpian
+OK: reemplazo local/remoto validado
+OK: archivo vacío, grande, Unicode/espacios y carpeta recursiva
+OK: colisión archivo/directorio remoto bloqueada sin pérdida de datos
+OK: fallos inyectados conservan destino anterior y limpian temporales
+[OK]   regresión transferencias
+[OK]   credential target MobHector
+[OK]   credential_store import portable
+[OK]   fingerprint SHA256 host key
+[OK]   persistencia known_hosts
+[OK]   eliminar known_hosts
+[OK]   runtime PySide6 + WebEngine + WebChannel
+[OK]   asset xterm.js
+[OK]   asset xterm.css
+[OK]   asset xterm-addon-fit.js
+[OK]   sin funciones/métodos duplicados
+[OK]   cero sesiones al eliminar la última
+[OK]   valida nombres remotos de UI
+[OK]   SFTP distingue ENOENT de permisos
+[OK]   errores refresh SFTP obsoletos descartados
+[OK]   fit terminal debounced
+[OK]   QThread reader retenido hasta terminar
+[OK]   Glass global no duplica backdrop terminal
+[OK]   transfer SFTP distingue ENOENT
+[OK]   download bloquea path traversal remoto
+[OK]   mobhector.bat versión 1.4.0
+[OK]   mobhector_debug.bat versión 1.4.0
+[OK]   regresión 1.4.0 seguridad, cancelación y rollback - pruebas de comportamiento aprobadas
+
+====================================================================
+PASS: 93   WARN: 0   FAIL: 0
+RESULTADO: APROBADO

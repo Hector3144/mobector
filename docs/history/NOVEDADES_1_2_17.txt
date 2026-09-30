@@ -1,0 +1,20 @@
+MOBHECTOR 1.2.17 - PLATON + SU
+================================
+
+El cambio de usuario ya NO usa direct-tcpip.
+Replica el flujo manual que funciona: su - USUARIO.
+
+Terminal:
+- detecta Password:/Contraseña:
+- envía el secreto sólo al PTY
+- valida identidad con id -un
+
+SFTP:
+- intenta PTY raw -> su usuario -> sftp-server
+- si funciona, navegación y transferencias usan el usuario destino
+- si el servidor lo bloquea, Terminal sigue con su y SFTP queda con el usuario Platon, claramente indicado
+
+Ejemplo ficticio:
+ssh.exe -l TmP7aK9Q -p 61234 127.0.0.1
+
+La contraseña no se guarda en config.json ni Credential Manager.

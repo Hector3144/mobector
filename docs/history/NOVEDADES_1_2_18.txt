@@ -1,0 +1,55 @@
+MOBHECTOR 1.2.18 - PLATON SU HARDENED
+=======================================
+
+CORRECCION 1: VALIDACION DE `su -`
+----------------------------------
+1.2.17 buscaba un marcador demasiado pronto y podía leer el echo del
+comando `printf` como si fuera la salida de `id -un`.
+
+1.2.18:
+- espera que `su -` termine de procesar contraseña/MOTD/prompt;
+- desactiva el echo temporalmente;
+- genera markers UUID únicos;
+- exige el bloque completo:
+
+    BEGIN
+    usuario_real
+    END
+
+- sólo acepta el contenido entre BEGIN y END;
+- restaura echo ante éxito o error.
+
+CORRECCION 2: SFTP NO PUEDE TUMBAR LA TERMINAL
+----------------------------------------------
+El intento de sftp-server bajo `su` ya NO usa el transporte SSH principal.
+
+Ahora:
+- Terminal = conexión Platon principal.
+- SFTP bajo su = segunda conexión Platon aislada.
+- Fallback SFTP Platon = otra conexión aislada limpia.
+
+Si sftp-server falla/cierra el canal:
+- la terminal principal permanece viva;
+- MobHector informa que SFTP usa la identidad Platon;
+- no aparece un "Server connection dropped" provocado por contaminar
+  el transporte principal.
+
+SFTP BAJO USUARIO DESTINO
+-------------------------
+Se intenta:
+    stty raw -echo
+      -> su - USUARIO -c '<READY>; exec sftp-server'
+      -> Password
+      -> READY
+      -> protocolo SFTP binario
+
+Sólo después de recibir READY se entrega el canal a Paramiko SFTPClient.
+
+SEGURIDAD
+---------
+- Password sólo RAM.
+- No logs.
+- No config.json.
+- No Credential Manager.
+- Sin AutoAddPolicy.
+- Endpoints Platon siguen con validación explícita de host-key.

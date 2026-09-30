@@ -1,0 +1,2 @@
+Python: compilación y ruff F821/F822/F823 sin hallazgos.
+PowerShell: tree-sitter-powershell, tres scripts parseados sin ERROR ni nodos faltantes. No se ejecutaron en Windows.

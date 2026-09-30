@@ -1,0 +1,54 @@
+MOBHECTOR 1.3.0 - MOBA PRODUCTIVITY
+===================================
+
+Funciones inspiradas en MobaXterm y software alternativo del documento técnico:
+
+1. QUICK CONNECT
+   - Ctrl+Shift+Q.
+   - usuario@host[:puerto] o comando ssh.
+   - Sesión efímera: no se agrega a config.json.
+   - Password sólo en RAM.
+
+2. COMANDOS RÁPIDOS / SNIPPETS
+   - Panel acoplable Ctrl+Shift+P.
+   - Ejecutar con doble clic.
+   - Agregar, editar y eliminar comandos.
+   - Toolbox inicial de diagnóstico Unix/Linux.
+   - Se ejecuta sólo sobre la terminal activa para evitar broadcasts accidentales.
+
+3. BÚSQUEDA DE TERMINAL
+   - Ctrl+F: buscar en scrollback.
+   - F3: siguiente.
+   - Shift+F3: anterior.
+   - Compatible con historial de hasta 1.000.000 de líneas.
+
+4. TRANSCRIPT DE SESIÓN
+   - Ctrl+Shift+G inicia/detiene.
+   - Logs en %LOCALAPPDATA%\MobHector\Logs\Sessions.
+   - Se cierra automáticamente al cerrar la terminal.
+
+5. STARTUP COMMAND
+   - Nuevo campo por sesión.
+   - Se ejecuta al conectar y al reconectar.
+
+6. ORGANIZACIÓN DE SESIONES
+   - Favoritos ⭐.
+   - Campo Grupo / carpeta.
+
+7. PORTABILIDAD SEGURA
+   - Exportar sesiones a JSON sin contraseñas, credential_id ni secretos RAM.
+   - Importación regenera identificadores de credencial y obliga a introducir contraseña nuevamente.
+   - Perfiles Platon se omiten del export porque su secreto está protegido por Windows Credential Manager.
+
+8. SEGURIDAD
+   - No agrega servidores FTP/TFTP/Telnet/HTTP/NFS/VNC ni listeners.
+   - No modifica known_hosts ni política de verificación SSH.
+   - No degrada almacenamiento de credenciales.
+
+CORRECCION DEL ACTUALIZADOR (FIX1)
+----------------------------------
+- El actualizador 1.3.0 ahora instala también actualizar_mobhector.ps1 y
+  actualizar_mobhector.bat en el directorio de MobHector antes de ejecutar QA.
+- Esto evita que qa_mobhector.py valide por error un updater antiguo que haya
+  quedado instalado de una versión previa.
+- Ambos archivos quedan cubiertos por MANIFEST_SHA256.txt, backup y rollback.

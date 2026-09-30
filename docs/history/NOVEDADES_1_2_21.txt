@@ -1,0 +1,40 @@
+MOBHECTOR 1.2.21 - PLATON SU + SFTP PATH ONLY
+===============================================
+
+DISEÑO FINAL
+------------
+TERMINAL:
+    Platon
+      -> su - USUARIO
+      -> Password
+      -> usuario destino
+
+SFTP:
+    siempre conserva la conexión SFTP temporal de Platon
+      -> NO su
+      -> NO sftp-server
+      -> NO segundo usuario SFTP
+      -> sólo abre la RUTA HOME del usuario ingresado
+
+HOME:
+    se descubre con:
+      getent passwd USUARIO
+    fallback:
+      /etc/passwd
+      /home/USUARIO
+
+El panel muestra:
+    SFTP Platon → HOME destino
+
+IMPORTANTE
+----------
+La ruta cambia; la identidad SFTP NO cambia.
+
+Si la identidad Platon no tiene permiso sobre ese HOME:
+- la ruta permanece visible;
+- no se vuelve automáticamente a /home del usuario Platon;
+- no aparece popup modal de PermissionError;
+- el panel muestra:
+      Sin permisos SFTP • identidad Platon
+
+El `su -` de la terminal se conserva exactamente.

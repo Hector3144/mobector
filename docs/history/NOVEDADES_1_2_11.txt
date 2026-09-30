@@ -1,0 +1,42 @@
+MOBHECTOR 1.2.11 - LOCAL SHELL
+================================
+
+NUEVO
+-----
+En el panel "Sesiones" aparece:
+
+    ⌘ Local Shell  [▼]
+
+Clic principal:
+    abre PowerShell local.
+
+Menú desplegable:
+    - PowerShell
+    - CMD
+
+COMPORTAMIENTO
+--------------
+1. Si Windows Terminal (wt.exe) está instalado, MobHector lo usa.
+2. Si PowerShell 7 (pwsh.exe) existe, se prefiere.
+3. Si no, usa Windows PowerShell.
+4. Si Windows Terminal no existe, abre una consola clásica nueva.
+5. CMD usa %COMSPEC%.
+6. El directorio inicial es %USERPROFILE%.
+
+USO
+---
+Desde Local Shell puedes ejecutar, por ejemplo:
+
+    ssh usuario@host
+    ssh -J usuario@salto usuario@destino
+    scp archivo usuario@host:/tmp/
+    ping host
+    nslookup host
+    Test-NetConnection host -Port 22
+
+No crea ni modifica sesiones SSH guardadas en MobHector.
+
+SE CONSERVA
+-----------
+Todos los fixes hasta 1.2.10:
+historial, clear, Vim, MultiExec, Glass, selección y copy/paste.

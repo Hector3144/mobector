@@ -1,0 +1,62 @@
+MOBHECTOR 1.2.13 - LOCAL SHELL INTEGRADO
+==========================================
+
+CAMBIO PRINCIPAL
+----------------
+Local Shell ya NO abre Windows Terminal, PowerShell ni CMD en una ventana
+externa.
+
+Ahora utiliza Windows ConPTY y el mismo xterm.js de MobHector.
+
+UBICACION
+---------
+En la parte inferior del panel Sesiones:
+
+    [+ SSH] [>_ Local ▼] [Conectar]
+
+También aparece junto a "+ Sesión" en la toolbar.
+
+Clic en >_ Local:
+    PowerShell integrado
+
+Flecha:
+    PowerShell
+    CMD
+
+Atajo:
+    Ctrl+Shift+L
+
+RESULTADO
+---------
+Se abre una pestaña central:
+
+    Inicio | ● SSH | >_ PowerShell
+
+Desde ahí funcionan dentro de MobHector:
+    ssh usuario@host
+    ssh -J usuario@salto usuario@destino
+    scp
+    ping
+    nslookup
+    PowerShell
+    CMD
+
+BACKEND
+-------
+Windows ConPTY:
+    CreatePseudoConsole
+    ResizePseudoConsole
+    pipes ReadFile/WriteFile
+    CreateProcessW + STARTUPINFOEX
+
+No requiere pywinpty ni nuevas dependencias.
+
+La terminal local reutiliza:
+    TerminalWidget
+    xterm.js
+    zoom
+    temas/Glass
+    historial
+    selección
+    copy/paste
+    Ctrl+C

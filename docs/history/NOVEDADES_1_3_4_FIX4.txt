@@ -1,0 +1,7 @@
+MobHector 1.3.4 FIX4 — Detached Tab / Ruster Fix
+
+- Corrige desaparición de pestañas SSH/Local al desacoplarlas en ventana independiente.
+- Causa: DetachedSessionWindow heredó por error el handler show_toolbar_context_menu de MainWindow.
+- La toolbar desacoplada ya no referencia métodos de MainWindow que no existen en esa clase.
+- Desacople transaccional: si la ventana independiente falla al construirse, la pestaña se restaura automáticamente en la ventana principal.
+- Conserva reattach, Local Shell, SSH/Ruster, SFTP, zoom, Recorder y navbar personalizable.

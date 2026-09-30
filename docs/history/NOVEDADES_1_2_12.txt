@@ -1,0 +1,30 @@
+MOBHECTOR 1.2.12 - LOCAL SHELL VISIBLE
+=========================================
+
+CORRECCION
+----------
+El botón Local Shell 1.2.11 estaba debajo de la lista de sesiones y podía
+quedar fuera de la zona visible del dock.
+
+Ahora queda SIEMPRE arriba:
+
+    MOBHECTOR
+    [ Local Shell (Windows) ] [▼]
+    [ Filtrar sesiones...      ]
+
+Clic:
+    PowerShell
+
+Flecha:
+    PowerShell
+    CMD
+
+Atajo global:
+    Ctrl+Shift+L
+
+El atajo funciona incluso si el panel Sesiones está cerrado.
+
+El launcher continúa prefiriendo:
+    Windows Terminal + PowerShell 7
+    Windows Terminal + Windows PowerShell
+    consola clásica como fallback.

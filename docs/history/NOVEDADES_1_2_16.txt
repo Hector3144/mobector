@@ -1,0 +1,53 @@
+MOBHECTOR 1.2.16 - PLATON + SALTO DE USUARIO
+==============================================
+
+En ⚡ Platon ahora puedes pegar, por ejemplo:
+
+    ssh.exe -l TmP7aK9Q -p 61234 127.0.0.1
+
+El ejemplo es ficticio; no contiene datos reales de sesiones Platon.
+
+OPCION NUEVA
+------------
+    [ ] Saltar a otro usuario después de entrar por Platon
+
+Si la marcas:
+    Usuario destino: C12345678
+    Contraseña:      ********
+
+ARQUITECTURA
+------------
+Primer salto:
+    MobHector
+       -> 127.0.0.1:PUERTO_PLATON
+       -> usuario temporal Platon
+       -> SSH auth "none"
+
+Segundo salto opcional:
+    transporte Platon
+       -> direct-tcpip
+       -> 127.0.0.1:22 visto desde el servidor
+       -> usuario destino + contraseña
+
+Después del segundo salto:
+    Terminal = usuario destino
+    SFTP     = usuario destino
+    Home     = home del usuario destino
+
+No se usa `su`.
+No se simula SFTP con comandos.
+Es una segunda sesión SSH real encapsulada dentro de la primera.
+
+SEGURIDAD
+---------
+- La opción viene DESACTIVADA por defecto.
+- La contraseña del usuario destino no se guarda en config.json.
+- Sólo permanece en RAM durante la vida de la pestaña para reconexión.
+- El SSH interno también usa verificación explícita de host-key.
+- Al cerrar la sesión la contraseña se elimina de la caché RAM.
+
+LIMITACION
+----------
+El endpoint Platon debe permitir TCP forwarding/direct-tcpip.
+Si Platon lo bloquea, MobHector avisará y podrás usar Platon sin el
+segundo salto.

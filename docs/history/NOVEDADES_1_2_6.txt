@@ -1,0 +1,34 @@
+MOBHECTOR 1.2.6 - HISTORY INTEGRITY / QA HARDENED
+==================================================
+
+HISTORIAL
+---------
+- Se corrigió el anclaje de historial: ya no usa viewportY absoluto.
+- Ahora usa markers de xterm que siguen la línea aunque el buffer cambie.
+- Se bloquea CSI 3 J por defecto (Erase Scrollback), usado por algunos
+  comandos `clear` para destruir el historial.
+- ED2 sigue limpiando la pantalla y empujando el contenido a scrollback.
+- La acción local Limpiar ya no usa term.clear(); hace limpieza visual
+  preservando scrollback.
+- Badge más claro: "X líneas hasta el final".
+- 500.000 líneas por defecto, hasta 1.000.000.
+
+QA / HARDENING
+--------------
+- 0 sesiones permanece válido al borrar la última.
+- Una sola remote_join; nombres remotos validados.
+- SFTP distingue ENOENT de PermissionError/red.
+- Protección de path traversal en descarga recursiva.
+- Refresh SFTP viejo no ensucia una carpeta nueva.
+- resize_pty debounced/deduplicado.
+- QThread lector retenido hasta finished si tarda en terminar.
+- Glass global no duplica el backdrop privado.
+
+SE CONSERVA
+-----------
+- MultiExec paste a todas las sesiones Activas.
+- selección larga con auto-scroll.
+- Vim Esc/:wq.
+- mouse Vim/TUI.
+- Glass sólo terminal.
+- Ctrl+V anti-duplicado.

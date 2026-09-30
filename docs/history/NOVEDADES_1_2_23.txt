@@ -1,0 +1,48 @@
+MOBHECTOR 1.2.23 - PERFILES PLATON GUARDADOS
+==============================================
+
+CREAR
+-----
+En ⚡ Platon:
+1. pega el código temporal;
+2. marca el cambio con su -;
+3. usuario + contraseña;
+4. marca:
+       Guardar este usuario como sesión Platon
+5. asigna un nombre.
+
+SE GUARDA
+---------
+config.json:
+    nombre del perfil
+    usuario del su -
+    credential_id
+
+Windows Credential Manager:
+    contraseña del su -
+
+NO SE GUARDA
+------------
+    comando ssh.exe temporal
+    usuario temporal Platon
+    puerto temporal Platon
+
+ABRIR DESPUES
+-------------
+Doble clic en:
+    ⚡ Producción Unix
+       su - C12345678
+
+MobHector sólo solicita:
+    ssh.exe -l R7x9Lm2Q -p 58421 127.0.0.1
+
+Después combina:
+    endpoint temporal
+    + usuario guardado del su -
+    + contraseña protegida en Windows.
+
+SFTP
+----
+Se conserva 1.2.22:
+    identidad SFTP = Platon
+    ruta = HOME por defecto de Platon.

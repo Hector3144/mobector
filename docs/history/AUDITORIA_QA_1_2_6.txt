@@ -1,0 +1,58 @@
+MOBHECTOR 1.2.6 - AUDITORIA QA / HISTORY INTEGRITY
+====================================================
+
+DIAGNOSTICO DEL HISTORIAL
+-------------------------
+1. TerminalWidget.clear() utilizaba window.term.clear().
+   La operación destruye el buffer/scrollback de xterm.
+
+2. Un servidor puede enviar CSI 3 J (Erase Scrollback).
+   Ahora se intercepta por defecto y no puede destruir el historial.
+
+3. El modo "mantener posición" guardaba viewportY como índice absoluto.
+   Después de reflow/resize podía señalar otro contenido.
+   Ahora usa xterm registerMarker() para anclar la línea visual real.
+
+4. El indicador antiguo "N líneas atrás" era ambiguo.
+   Ahora muestra "N líneas hasta el final".
+
+5. Se conserva:
+   - 500.000 líneas por defecto.
+   - máximo 1.000.000.
+   - selección larga con auto-scroll.
+   - MultiExec paste.
+   - Vim/TUI.
+   - Glass sólo terminal.
+
+QA / HARDENING ADICIONAL
+------------------------
+- 0 sesiones sigue siendo válido al eliminar la última.
+- Eliminada definición duplicada de remote_join().
+- Validación de nombres remotos en crear/renombrar.
+- SFTP distingue ENOENT de PermissionError/error de red.
+- Descarga recursiva bloquea path traversal.
+- Refresh SFTP obsoleto no muestra errores de otra carpeta.
+- resize_pty debounced y geometría deduplicada.
+- QThread TerminalReader retenido hasta finished si tarda al cerrar.
+- Glass global evita doble backdrop.
+
+COMPORTAMIENTO NUEVO
+--------------------
+Configuración > Terminal > Pantalla:
+  [x] Mantener mi posición cuando estoy revisando historial
+  [x] Proteger historial contra clear / borrado remoto de scrollback
+
+Prueba recomendada:
+  echo UNO
+  echo DOS
+  echo TRES
+  clear
+  echo CUATRO
+
+Después de subir, UNO/DOS/TRES deben seguir disponibles.
+
+NOTA
+----
+El scrollback es memoria de la sesión actual. No se guarda en disco al
+cerrar MobHector, para no persistir automáticamente posibles secretos o
+salidas sensibles.

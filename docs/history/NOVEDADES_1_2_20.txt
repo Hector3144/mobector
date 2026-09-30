@@ -1,0 +1,26 @@
+MOBHECTOR 1.2.20 - HOME DESTINO
+=================================
+
+Cuando Platon + su logra:
+    Terminal = usuario destino
+
+pero el servidor no permite:
+    SFTP = usuario destino
+
+MobHector conserva el SFTP temporal Platon y ahora:
+
+1. descubre el HOME real del usuario destino con getent passwd;
+2. usa /etc/passwd como fallback;
+3. prueba si el SFTP Platon puede acceder a ese HOME;
+4. si puede, SFTP / Archivos arranca directamente allí.
+
+Ejemplo:
+    Terminal        = C12345678
+    Identidad SFTP  = Platon
+    Carpeta inicial = /home/C12345678
+
+La UI indica:
+    SFTP Platon → HOME destino
+
+Esto no falsifica permisos: las operaciones siguen usando la identidad
+SFTP temporal de Platon.

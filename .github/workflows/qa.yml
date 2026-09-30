@@ -1,0 +1,42 @@
+name: MobHector QA
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: pip
+      - name: Install Linux libraries
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y libxtst6 libxkbfile1 libnss3 libasound2t64
+      - name: Install locked Windows dependencies
+        if: runner.os == 'Windows'
+        run: python -m pip install --require-hashes --only-binary=:all: -r requirements-windows.lock
+      - name: Install Linux dependencies
+        if: runner.os == 'Linux'
+        run: python -m pip install -r requirements.txt
+      - name: Behavioral tests (includes SSH/SFTP loopback)
+        run: python -m unittest discover -s tests -v
+      - name: Source audit
+        env:
+          QT_QPA_PLATFORM: offscreen
+        run: python qa_mobhector.py --source
+      - name: GUI smoke
+        env:
+          QT_QPA_PLATFORM: offscreen
+          QTWEBENGINE_CHROMIUM_FLAGS: --disable-gpu
+        run: python tools/smoke_gui.py
+      - name: Build installer package
+        run: python tools/build_release.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MobHector-1.4.0-${{ matrix.os }}
+          path: dist/*

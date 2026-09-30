@@ -1,0 +1,12 @@
+MOBHECTOR 1.2.9
+
+NUEVO:
+- Mantener clic izquierdo sobre el carácter inicial.
+- Sin soltar, presionar Fin/End.
+- Selecciona desde ese carácter hasta el final lógico actual de toda la salida.
+- Baja automáticamente al final.
+- Fin sin clic izquierdo sigue normal.
+- Sólo buffer normal; no secuestra Vim/top/less.
+- No autocopia selecciones potencialmente gigantes; Ctrl+C las copia.
+
+Se conservan historial 500K/1M, clear protegido, MultiExec, Vim/TUI, Glass y SFTP.

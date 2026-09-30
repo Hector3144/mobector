@@ -1,0 +1,7 @@
+MobHector 1.3.4 - Zoom Viewport Fix
+
+- Corrige historial fantasma al cambiar zoom.
+- Captura el estado live-end antes de modificar fontSize.
+- Mantiene scrollToBottom durante los fits sólo si el operador estaba al final.
+- Conserva marker si el operador estaba leyendo historial.
+- Mantiene sincronización PTY y Startup Command de 1.3.2.

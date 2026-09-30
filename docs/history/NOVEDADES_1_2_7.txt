@@ -1,0 +1,15 @@
+MOBHECTOR 1.2.7
+
+La prueba real mostró:
+  ANTES_CLEAR_001 ... 086
+  faltaban 087 ... 120
+
+Las 34 líneas faltantes eran el viewport activo.
+
+MobHector ahora:
+- intercepta ED2 antes de xterm
+- mueve explícitamente todas las filas visibles al scrollback
+- bloquea ED3
+- soporta secuencias CSI fragmentadas
+- usa la misma estrategia en Limpiar
+- conserva 500.000 líneas por defecto y máximo 1.000.000

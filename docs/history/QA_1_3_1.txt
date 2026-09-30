@@ -1,0 +1,12 @@
+MOBHECTOR 1.3.1 - QA PRODUCTIVITY FUSION
+========================================
+
+La actualización ejecuta:
+- py_compile del core y módulos críticos.
+- qa_mobhector.py completo.
+- validadores históricos 1.0.1 -> 1.2.23.
+- validar_productividad_v1_3_0.py (regresión del Productivity Pack).
+- validar_productividad_v1_3_1.py (Compose/Snippets/WSL/Git Bash/OSC7).
+- validar_transferencias.py con fallos inyectados y temporales .part.
+
+El updater conserva backup + rollback y valida MANIFEST_SHA256.txt antes de copiar.
