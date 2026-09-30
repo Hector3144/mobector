@@ -1,4 +1,4 @@
-# MobHector 1.4.1
+# MobHector 1.5.0
 
 Cliente SSH/SFTP para Windows de Hector Perez (SGNaomi). Terminal xterm.js, sesiones guardadas, Platón, credenciales de Windows, SFTP, MultiExec, macros, búsqueda, temas y ventanas separables.
 
@@ -15,7 +15,7 @@ Actualización: reutiliza el runtime existente, valida archivos y dependencias i
 
 El lanzador de PowerShell solicita `Bypass` únicamente para su proceso, como los paquetes anteriores; no cambia la política permanente. No intenta anular una política de dominio, AppLocker o WDAC. En equipos administrados usa el procedimiento autorizado por tu organización.
 
-## Colores de terminal (1.4.1)
+## Colores de terminal (1.5.0)
 
 En Apariencia → Sólo la terminal elige **Moba clásico · colores y resaltado** o **Moba clásico · sólo colores ANSI**. El primero resalta estados, IPv4 y rutas sobre texto sin color. Conserva los colores explícitos del servidor y se desactiva en la pantalla alternativa de Vim/top. No modifica comandos, archivos remotos ni texto copiado.
 
@@ -74,3 +74,7 @@ Ejecuta `bash instalar_linux.sh` con tu usuario normal, sin sudo. Prepara los pa
 Funciona desde el ZIP extraído o descargando únicamente el script: en ese caso clona el repositorio en `~/.local/share/MobHector/source` (respeta `XDG_DATA_HOME`). Si encuentra una copia previa, la reutiliza sin sobrescribirla ni actualizarla automáticamente.
 
 Para volver a abrir: `bash ejecutar_linux.sh` desde la carpeta del proyecto. Opciones de instalación: `--no-launch` prepara sin abrir; `--skip-system` omite apt/dnf. Necesitas escritorio gráfico; no ejecutes MobHector como root. Linux conserva las limitaciones descritas: no hay consola ConPTY ni Windows Credential Manager. En CentOS Stream 9 instala Python 3.11 paralelo al Python 3.9 del sistema y lo utiliza para crear `.venv`. Si encuentra un entorno antiguo incompatible, lo conserva como `.venv.backup.*`. No cambia el Python de dnf, SELinux ni repositorios. Instalador verificado por sintaxis y selección de paquetes con comandos simulados; instalación completa pendiente en el equipo real.
+
+## X11: aplicaciones gráficas remotas (1.5.0)
+
+Editar sesión SSH → Aplicaciones gráficas → X11. Activa la casilla sólo para un servidor de confianza y reconecta. En Windows instala VcXsrv previamente; el modo automático encuentra `vcxsrv.exe` o permite seleccionarlo. En Linux usa el display y Xauthority de tu escritorio. No es necesario instalar un escritorio completo en el servidor SSH. Consulta [guía X11](docs/X11.md).

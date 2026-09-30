@@ -2,7 +2,7 @@
 $ErrorActionPreference = "Stop"
 $ProgressPreference = "SilentlyContinue"
 
-$AppVersion = "1.4.1"
+$AppVersion = "1.5.0"
 $SourceDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $InstallDir = Join-Path $env:USERPROFILE "bin"
 $RuntimeDir = Join-Path $InstallDir "MobHectorRuntime"
@@ -171,7 +171,7 @@ function Install-PrivatePython {
 function Copy-AppFiles {
     New-Item -ItemType Directory -Force -Path $InstallDir | Out-Null
     $files = @('mobhector.pyw', 'transfer_engine.py', 'credential_store.py', 'host_key_store.py',
-        'terminal_io.py', 'session_validation.py', 'remote_text.py', 'install_support.py', 'requirements.txt',
+        'x11_forwarding.py', 'terminal_io.py', 'session_validation.py', 'remote_text.py', 'install_support.py', 'requirements.txt',
         'requirements-windows.lock', 'VERSION.txt', 'mobhector.bat', 'mobhector_debug.bat',
         'rusterfiles.bat', 'actualizar_mobhector.bat', 'actualizar_mobhector.ps1',
         'desinstalar_mobhector.bat', 'desinstalar_mobhector.ps1', 'MANIFEST_SHA256.txt')

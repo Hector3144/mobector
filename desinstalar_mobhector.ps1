@@ -14,7 +14,7 @@ foreach ($line in Get-Content -LiteralPath $manifest) {
     if ([IO.Path]::IsPathRooted($relative) -or $relative.Contains(':') -or $relative -match '(^|[\\/])\.\.([\\/]|$)') { throw 'Ruta insegura en el registro.' }
     if ([IO.Path]::GetFileName($relative) -in @('config.json', 'known_hosts')) { throw 'Datos de usuario en el registro; se aborta.' }
     $owned = @('mobhector.pyw', 'transfer_engine.py', 'credential_store.py', 'host_key_store.py',
-        'terminal_io.py', 'session_validation.py', 'remote_text.py', 'install_support.py', 'requirements.txt',
+        'x11_forwarding.py', 'terminal_io.py', 'session_validation.py', 'remote_text.py', 'install_support.py', 'requirements.txt',
         'requirements-windows.lock', 'VERSION.txt', 'mobhector.bat', 'mobhector_debug.bat',
         'rusterfiles.bat', 'actualizar_mobhector.bat', 'actualizar_mobhector.ps1',
         'desinstalar_mobhector.bat', 'desinstalar_mobhector.ps1',

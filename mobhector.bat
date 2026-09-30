@@ -1,6 +1,6 @@
 @echo off
 setlocal EnableExtensions
-title MobHector 1.4.1
+title MobHector 1.5.0
 
 set "ROOT=%~dp0"
 set "APP=%ROOT%mobhector.pyw"

@@ -1,5 +1,12 @@
 # Cambios
 
+## 1.5.0 — 2026-09-30
+
+- Reenvío X11 autenticado por sesión SSH estándar.
+- Integración con VcXsrv instalado en Windows y Xauthority/display existentes en Linux.
+- Cookies SSH temporales verificadas antes de conectar al servidor X local; cierre al desconectar.
+- Sesiones importadas mantienen X11 desactivado.
+
 ## 1.4.1 — 2026-09-30
 
 - Paleta Moba clásico sobre negro, con 16 colores ANSI y variante sin resaltado.

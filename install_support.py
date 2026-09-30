@@ -11,7 +11,7 @@ import uuid
 from datetime import datetime
 
 REQUIRED = {'mobhector.pyw', 'transfer_engine.py', 'host_key_store.py',
-            'credential_store.py', 'terminal_io.py', 'session_validation.py', 'remote_text.py',
+            'credential_store.py', 'x11_forwarding.py', 'terminal_io.py', 'session_validation.py', 'remote_text.py',
             'assets/terminal.html', 'assets/xterm.js', 'assets/xterm.css',
             'assets/xterm-addon-fit.js', 'VERSION.txt', 'mobhector.bat', 'requirements.txt',
             'install_support.py'}
@@ -109,7 +109,7 @@ def apply_update(source, destination, backup_root, validate=None):
 def validate_runtime(destination):
     subprocess.run([sys.executable, '-c',
         'import paramiko, PySide6; from PySide6.QtWebEngineWidgets import QWebEngineView; '
-        'import terminal_io, session_validation, remote_text, transfer_engine, host_key_store, credential_store'],
+        'import x11_forwarding, terminal_io, session_validation, remote_text, transfer_engine, host_key_store, credential_store'],
         cwd=destination, check=True)
     for path in destination.glob('*.py*'):
         if path.suffix in ('.py', '.pyw'):

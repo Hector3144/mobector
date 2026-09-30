@@ -6,7 +6,7 @@ app = (root / 'mobhector.pyw').read_text(encoding='utf-8-sig')
 html = (root / 'assets' / 'terminal.html').read_text(encoding='utf-8')
 ast.parse(app)
 checks = {
-    'version_123': 'APP_VERSION = "1.4.1"' in app,
+    'version_123': 'APP_VERSION = "1.5.0"' in app,
     'no_plain_esc_application_shortcut': 'QShortcut(QKeySequence("Esc"), self)' not in app,
     'no_shortcut_escape_member': 'self.shortcut_escape =' not in app,
     'immersive_ctrl_shift_esc': 'QKeySequence("Ctrl+Shift+Esc")' in app,

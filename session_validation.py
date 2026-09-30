@@ -54,6 +54,7 @@ def validate_session(raw):
     session['favorite'] = raw.get('favorite', False)
     # Imported startup commands never execute merely by connecting.
     session['startup_command'] = ''
+    session['x11_enabled'] = False  # Imported sessions cannot grant display access.
     return session
 
 

@@ -9,7 +9,7 @@ html = (root / "assets" / "terminal.html").read_text(encoding="utf-8")
 ast.parse(app)
 
 checks = {
-    "version": 'APP_VERSION = "1.4.1"' in app,
+    "version": 'APP_VERSION = "1.5.0"' in app,
     "native_default": '"terminal_tui_native_mouse": True' in app,
     "fallback_default": '"terminal_tui_arrow_fallback": True' in app,
     "native_ui": "Permitir mouse nativo en Vim / TUI" in app,

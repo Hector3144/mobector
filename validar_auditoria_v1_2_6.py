@@ -12,8 +12,8 @@ TREE = ast.parse(APP)
 
 checks = {}
 
-checks["version_126"] = 'APP_VERSION = "1.4.1"' in APP
-checks["module_doc_version"] = "MobHector v1.4.1" in APP
+checks["version_126"] = 'APP_VERSION = "1.5.0"' in APP
+checks["module_doc_version"] = "MobHector v1.5.0" in APP
 
 duplicates = []
 module_defs = {}

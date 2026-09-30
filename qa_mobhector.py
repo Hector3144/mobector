@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Auditoría automatizada de MobHector 1.4.1.
+"""Auditoría automatizada de MobHector 1.5.0.
 
 Uso:
   python qa_mobhector.py --source   # QA de paquete, sin requerir deps/activos CDN
@@ -60,7 +60,7 @@ def contrast(a: str, b: str) -> float:
 
 
 print("=" * 68)
-print("MobHector 1.4.1 - QA / AUDITORIA AUTOMATIZADA")
+print("MobHector 1.5.0 - QA / AUDITORIA AUTOMATIZADA")
 print("=" * 68)
 
 required = [
@@ -93,7 +93,7 @@ for module in ("transfer_engine.py", "credential_store.py", "host_key_store.py")
 
 # Identidad / branding / autoría.
 check("marca MobHector", 'APP_NAME = "MobHector"' in app_text)
-check("versión 1.4.1", 'APP_VERSION = "1.4.1"' in app_text)
+check("versión 1.5.0", 'APP_VERSION = "1.5.0"' in app_text)
 check("autor HECTOR PEREZ", 'DEVELOPER = "HECTOR PEREZ"' in app_text)
 check("alias SGNaomi", 'DEVELOPER_ALIAS = "SGNaomi"' in app_text)
 for signature_line in (
@@ -292,7 +292,7 @@ if tree is not None:
 
 
 
-# Auditoría 1.4.1: integridad de rutas, sesiones y rendimiento.
+# Auditoría 1.5.0: integridad de rutas, sesiones y rendimiento.
 check(
     "cero sesiones al eliminar la última",
     'self.config["sessions"].append(\n                    dict(DEFAULT_SESSION)' not in app_text
@@ -339,18 +339,18 @@ check(
 for launcher in ("mobhector.bat", "mobhector_debug.bat"):
     launcher_text = (ROOT / launcher).read_text(encoding="ascii")
     check(
-        f"{launcher} versión 1.4.1",
-        "1.4.1" in launcher_text
+        f"{launcher} versión 1.5.0",
+        "1.5.0" in launcher_text
     )
 
 # Behavioral security, cancellation and rollback tests replace obsolete script-text checks.
 try:
     result = subprocess.run([sys.executable, "-m", "unittest", "discover", "-s", str(ROOT / "tests"), "-v"],
                             cwd=ROOT, capture_output=True, text=True, timeout=60)
-    check("regresión 1.4.1 seguridad, cancelación y rollback", result.returncode == 0,
+    check("regresión 1.5.0 seguridad, cancelación y rollback", result.returncode == 0,
           result.stderr if result.returncode else "pruebas de comportamiento aprobadas")
 except Exception as exc:
-    fail("regresión 1.4.1", str(exc))
+    fail("regresión 1.5.0", str(exc))
 
 print("\n" + "=" * 68)
 print(f"PASS: {len(PASS)}   WARN: {len(WARN)}   FAIL: {len(FAIL)}")

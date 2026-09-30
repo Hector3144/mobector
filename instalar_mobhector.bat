@@ -1,10 +1,10 @@
 @echo off
 setlocal EnableExtensions
 chcp 65001 >nul 2>&1
-title MobHector 1.4.1 - Instalador completo
+title MobHector 1.5.0 - Instalador completo
 
 echo ============================================================
-echo   MOBHECTOR 1.4.1 - INSTALADOR COMPLETO PARA WINDOWS x64
+echo   MOBHECTOR 1.5.0 - INSTALADOR COMPLETO PARA WINDOWS x64
 echo ============================================================
 echo.
 echo Instala runtime Python privado, dependencias y accesos directos.

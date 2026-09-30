@@ -12,7 +12,7 @@ try {
     if ($running.Count -gt 0) { throw 'Cierra MobHector y vuelve a ejecutar la actualización.' }
     & $PythonExe (Join-Path $SourceDir 'install_support.py') $SourceDir $InstallDir $BackupRoot
     if ($LASTEXITCODE -ne 0) { throw 'La actualización falló. Revisa el resultado y la ubicación del respaldo.' }
-    Write-Host 'MobHector 1.4.1 actualizado. Sesiones y credenciales conservadas.' -ForegroundColor Green
+    Write-Host 'MobHector 1.5.0 actualizado. Sesiones y credenciales conservadas.' -ForegroundColor Green
 } catch {
     Write-Host $_.Exception.Message -ForegroundColor Red
     exit 1

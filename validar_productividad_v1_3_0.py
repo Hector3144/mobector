@@ -7,7 +7,7 @@ app = (ROOT / "mobhector.pyw").read_text(encoding="utf-8-sig")
 html = (ROOT / "assets" / "terminal.html").read_text(encoding="utf-8-sig")
 
 checks = {
-    "version_130": 'APP_VERSION = "1.4.1"' in app,
+    "version_130": 'APP_VERSION = "1.5.0"' in app,
     "quick_connect": "class QuickConnectDialog" in app and "def quick_connect" in app,
     "quick_commands": '"quick_commands": [' in app and "build_quick_commands_dock" in app,
     "startup_command": "startup_command" in app and "_run_startup_command" in app,

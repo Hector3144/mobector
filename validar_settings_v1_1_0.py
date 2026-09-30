@@ -9,7 +9,7 @@ html = (root / "assets" / "terminal.html").read_text(encoding="utf-8")
 ast.parse(app)
 
 checks = {
-    "version": 'APP_VERSION = "1.4.1"' in app,
+    "version": 'APP_VERSION = "1.5.0"' in app,
     "general_dialog": "class GeneralSettingsDialog(QDialog):" in app,
     "appearance_expanded": '"midnight", "graphite", "forest", "purple", "sepia"' in app,
     "accent": '"accent_color": "cyan"' in app,

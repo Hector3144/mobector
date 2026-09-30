@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-MobHector v1.4.1
+MobHector v1.5.0
 Cliente SSH/SFTP para Windows con terminal real y transferencias visuales.
 PySide6 + Paramiko.
 """
@@ -58,6 +58,7 @@ from PySide6.QtWebChannel import QWebChannel
 
 import paramiko
 from terminal_io import AsyncChannelWriter
+from x11_forwarding import X11Forwarder, parse_display
 from remote_text import decode_document, encode_document
 from session_validation import read_sessions
 from transfer_engine import upload as transfer_upload, download as transfer_download
@@ -81,7 +82,7 @@ from host_key_store import (
 
 
 APP_NAME = "MobHector"
-APP_VERSION = "1.4.1"
+APP_VERSION = "1.5.0"
 ORG_NAME = "MobHector"
 DEVELOPER = "HECTOR PEREZ"
 DEVELOPER_ALIAS = "SGNaomi"
@@ -1978,6 +1979,62 @@ class Worker(QRunnable):
 # Session dialog
 # ============================================================
 
+def configure_session_x11(owner):
+    options = owner._x11_options
+    dialog = QDialog(owner)
+    dialog.setWindowTitle("X11 · aplicaciones gráficas remotas")
+    dialog.setMinimumWidth(600)
+    form = QFormLayout(dialog)
+    enabled = QCheckBox("Permitir aplicaciones X11 de este servidor de confianza")
+    enabled.setChecked(options.get("x11_enabled", False) is True)
+    mode = QComboBox()
+    if os.name == "nt":
+        mode.addItem("Iniciar VcXsrv instalado en Windows", "managed")
+    mode.addItem("Usar servidor X11 existente", "existing")
+    mode.setCurrentIndex(max(0, mode.findData(options.get("x11_mode", "managed" if os.name == "nt" else "existing"))))
+    display = QLineEdit(options.get("x11_display", ""))
+    display.setPlaceholderText("Linux: DISPLAY actual; Windows: localhost:0.0")
+    authority = QLineEdit(options.get("x11_authority", ""))
+    authority.setPlaceholderText("Archivo Xauthority del servidor X (Linux: automático)")
+    executable = QLineEdit(options.get("x11_executable", ""))
+    executable.setPlaceholderText("Automático: Program Files/VcXsrv/vcxsrv.exe")
+    def file_row(field, title):
+        box = QWidget(); layout = QHBoxLayout(box); layout.setContentsMargins(0,0,0,0)
+        button = QPushButton("Examinar")
+        def choose():
+            path, _ = QFileDialog.getOpenFileName(dialog, title)
+            if path: field.setText(path)
+        button.clicked.connect(choose)
+        layout.addWidget(field); layout.addWidget(button)
+        return box
+    form.addRow(enabled)
+    form.addRow("Servidor gráfico local:", mode)
+    form.addRow("VcXsrv ejecutable:", file_row(executable, "Seleccionar vcxsrv.exe"))
+    form.addRow("Display local:", display)
+    form.addRow("Xauthority local:", file_row(authority, "Seleccionar archivo Xauthority"))
+    hint = QLabel("X11 concede a las aplicaciones remotas acceso a la pantalla X. Actívalo sólo para servidores de confianza. "
+                  "VcXsrv se instala aparte; MobHector lo inicia con autenticación y lo cierra al desconectar. "
+                  "No desactives el control de acceso del servidor X. Después de guardar, reconecta la sesión SSH.")
+    hint.setWordWrap(True); form.addRow(hint)
+    def refresh():
+        managed = mode.currentData() == "managed"
+        executable.setEnabled(managed); display.setEnabled(not managed); authority.setEnabled(not managed)
+    mode.currentIndexChanged.connect(refresh); refresh()
+    buttons = QDialogButtonBox(QDialogButtonBox.StandardButton.Save | QDialogButtonBox.StandardButton.Cancel)
+    def save():
+        if enabled.isChecked() and mode.currentData() == "existing":
+            try: parse_display(display.text().strip() or os.environ.get("DISPLAY", ""))
+            except ValueError as error:
+                QMessageBox.warning(dialog, "Display X11", str(error)); return
+        owner._x11_options = {"x11_enabled": enabled.isChecked(), "x11_mode": mode.currentData(),
+            "x11_display": display.text().strip(), "x11_authority": authority.text().strip(),
+            "x11_executable": executable.text().strip()}
+        owner.x11_button.setText("X11: activado · configurar" if enabled.isChecked() else "X11: desactivado · configurar")
+        dialog.accept()
+    buttons.accepted.connect(save); buttons.rejected.connect(dialog.reject); form.addRow(buttons)
+    dialog.exec()
+
+
 class SessionDialog(QDialog):
     """
     Editor de sesión con autenticación explícita.
@@ -1991,6 +2048,7 @@ class SessionDialog(QDialog):
         self._editing_existing = session is not None
         self._original_session = dict(session or {})
         s = dict(session or DEFAULT_SESSION)
+        self._x11_options = {k: v for k, v in s.items() if k.startswith("x11_")}
 
         self.credential_id = (
             str(s.get("credential_id") or "").strip()
@@ -2148,6 +2206,9 @@ class SessionDialog(QDialog):
             "Carpeta de envíos:",
             self.remote_inbox
         )
+        self.x11_button = QPushButton("X11: activado · configurar" if s.get("x11_enabled") else "X11: desactivado · configurar")
+        self.x11_button.clicked.connect(lambda: configure_session_x11(self))
+        form.addRow("Aplicaciones gráficas:", self.x11_button)
         form.addRow("Comando al conectar:", self.startup_command)
         form.addRow("", self.favorite)
         lay.addLayout(form)
@@ -2315,6 +2376,7 @@ class SessionDialog(QDialog):
             "folder": self.folder.text().strip(),
             "startup_command": self.startup_command.text().strip(),
             "favorite": self.favorite.isChecked(),
+            **self._x11_options,
         }
 
     def validate_accept(self):
@@ -3104,6 +3166,7 @@ class SSHConnection(QObject):
         self.sftp = None
         self.lock = threading.RLock()
         self.connected = False
+        self._x11_forwarder = None
 
         # Secretos sólo en RAM durante la vida de esta pestaña.
         self._password_cache = None
@@ -3361,11 +3424,32 @@ class SSHConnection(QObject):
                     exc_info=True
                 )
 
-            ch.invoke_shell()
+            try:
+                self._enable_x11(ch)
+                ch.invoke_shell()
+            except Exception:
+                ch.close()
+                self._close_x11()
+                raise
             ch.settimeout(0.2)
             return ch
 
+    def _enable_x11(self, channel):
+        if self.session.get("x11_enabled") is not True:
+            return
+        if self._x11_forwarder is None:
+            self._x11_forwarder = X11Forwarder(self.session, self.state_changed.emit)
+        self._x11_forwarder.request(channel)
+        self.state_changed.emit("Conectado · X11 activo")
+
+    def _close_x11(self):
+        forwarder = getattr(self, "_x11_forwarder", None)
+        self._x11_forwarder = None
+        if forwarder is not None:
+            forwarder.close()
+
     def _close_handles(self, emit_state=True):
+        self._close_x11()
         self.connected = False
         try:
             if self.sftp:

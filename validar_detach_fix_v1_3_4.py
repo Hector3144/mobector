@@ -17,7 +17,7 @@ try:
 except Exception:
     check('python_syntax', False)
 
-check('version_134', 'APP_VERSION = "1.4.1"' in APP)
+check('version_134', 'APP_VERSION = "1.5.0"' in APP)
 check('detached_window_class', 'class DetachedSessionWindow(QMainWindow):' in APP)
 DETACHED = APP.split('class DetachedSessionWindow(QMainWindow):',1)[1].split('class ToolbarCustomizeDialog',1)[0]
 check('detached_toolbar_no_main_context_handler', 'customContextMenuRequested.connect(self.show_toolbar_context_menu)' not in DETACHED)
