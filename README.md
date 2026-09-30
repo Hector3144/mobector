@@ -1,4 +1,4 @@
-# MobHector 1.4.0
+# MobHector 1.4.1
 
 Cliente SSH/SFTP para Windows de Hector Perez (SGNaomi). Terminal xterm.js, sesiones guardadas, Platón, credenciales de Windows, SFTP, MultiExec, macros, búsqueda, temas y ventanas separables.
 
@@ -14,6 +14,12 @@ Instalación nueva: Windows 10/11 x64 y acceso HTTPS a Python.org/PyPI. Instala 
 Actualización: reutiliza el runtime existente, valida archivos y dependencias importables, respalda y revierte la copia si falla la validación. No actualiza automáticamente el runtime anterior. No reemplaza `%APPDATA%\MobHector\config.json`, `known_hosts` ni Windows Credential Manager.
 
 El lanzador de PowerShell solicita `Bypass` únicamente para su proceso, como los paquetes anteriores; no cambia la política permanente. No intenta anular una política de dominio, AppLocker o WDAC. En equipos administrados usa el procedimiento autorizado por tu organización.
+
+## Colores de terminal (1.4.1)
+
+En Apariencia → Sólo la terminal elige **Moba clásico · colores y resaltado** o **Moba clásico · sólo colores ANSI**. El primero resalta estados, IPv4 y rutas sobre texto sin color. Conserva los colores explícitos del servidor y se desactiva en la pantalla alternativa de Vim/top. No modifica comandos, archivos remotos ni texto copiado.
+
+Se activa una sola vez al actualizar una terminal oscura predeterminada. Los otros temas se conservan. Es una aproximación al estilo clásico; MobaXterm permite personalizar su paleta y sus reglas. Las reglas actúan sobre filas visibles, con un máximo de 300 resaltados; no son un diagnóstico del estado real del servidor.
 
 ## Qué cambia
 

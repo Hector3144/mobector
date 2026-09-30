@@ -6,7 +6,7 @@ app=(root/'mobhector.pyw').read_text(encoding='utf-8-sig')
 html=(root/'assets'/'terminal.html').read_text(encoding='utf-8')
 ast.parse(app)
 checks={
- 'version':'APP_VERSION = "1.4.0"' in app,
+ 'version':'APP_VERSION = "1.4.1"' in app,
  'clean_special_copy':'function getCleanHeldClickEndSelectionText()' in html,
  'buffer_reader':'buffer.getLine(row)' in html,
  'trim_padding':'line.translateToString(true, fromColumn, toColumn)' in html,

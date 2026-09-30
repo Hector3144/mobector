@@ -22,7 +22,7 @@ except SyntaxError:
     add("python_syntax", False)
 
 # Core y funciones heredadas que deben sobrevivir.
-add("version_132_compatible", 'APP_VERSION = "1.4.0"' in APP)
+add("version_132_compatible", 'APP_VERSION = "1.4.1"' in APP)
 add("quick_connect_preserved", "class QuickConnectDialog" in APP and "def quick_connect" in APP)
 add("startup_command_preserved", "startup_command" in APP and "_run_startup_command" in APP)
 add("folders_favorites_preserved", '"folder"' in APP and '"favorite"' in APP)

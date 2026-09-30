@@ -23,7 +23,7 @@ connect_block=app[
 
 checks={
     "version":
-        'APP_VERSION = "1.4.0"' in app,
+        'APP_VERSION = "1.4.1"' in app,
 
     "config_mode":
         '"platon_saved",' in load_block,

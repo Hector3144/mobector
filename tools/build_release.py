@@ -10,9 +10,9 @@ FORBIDDEN={'config.json','known_hosts','.env','MANIFEST_SHA256.txt','MANIFEST_FU
 
 def build():
     dist=ROOT/'dist';dist.mkdir(exist_ok=True)
-    target=dist/'MobHector_1.4.0_WINDOWS_INSTALL_UPDATE.zip'
+    target=dist/'MobHector_1.4.1_WINDOWS_INSTALL_UPDATE.zip'
     with tempfile.TemporaryDirectory() as temp:
-        stage=Path(temp)/'MobHector_1.4.0';stage.mkdir()
+        stage=Path(temp)/'MobHector_1.4.1';stage.mkdir()
         for path in sorted(ROOT.rglob('*')):
             rel=path.relative_to(ROOT)
             if not path.is_file() or any(p in SKIP for p in rel.parts):continue

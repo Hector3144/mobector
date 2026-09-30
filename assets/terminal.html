@@ -59,6 +59,8 @@ html[data-scrollbar="false"] .xterm-viewport::-webkit-scrollbar{width:0!importan
     };
 
     const TERMINAL_THEMES = {
+      moba:{background:'#000000',foreground:'#c0c0c0',cursor:'#ffffff',cursorAccent:'#000000',selectionBackground:'#515c72',black:'#000000',red:'#c00000',green:'#00c000',yellow:'#c0c000',blue:'#5c5cff',magenta:'#c000c0',cyan:'#00c0c0',white:'#c0c0c0',brightBlack:'#808080',brightRed:'#ff5555',brightGreen:'#55ff55',brightYellow:'#ffff55',brightBlue:'#8080ff',brightMagenta:'#ff55ff',brightCyan:'#55ffff',brightWhite:'#ffffff'},
+      moba_plain:{background:'#000000',foreground:'#c0c0c0',cursor:'#ffffff',cursorAccent:'#000000',selectionBackground:'#515c72',black:'#000000',red:'#c00000',green:'#00c000',yellow:'#c0c000',blue:'#5c5cff',magenta:'#c000c0',cyan:'#00c0c0',white:'#c0c0c0',brightBlack:'#808080',brightRed:'#ff5555',brightGreen:'#55ff55',brightYellow:'#ffff55',brightBlue:'#8080ff',brightMagenta:'#ff55ff',brightCyan:'#55ffff',brightWhite:'#ffffff'},
       dark:{background:'#050607',foreground:'#d8dee9',cursor:'#f7f7f7',cursorAccent:'#050607',selectionBackground:'#315b68',black:'#2e3440',red:'#bf616a',green:'#a3be8c',yellow:'#ebcb8b',blue:'#81a1c1',magenta:'#b48ead',cyan:'#88c0d0',white:'#e5e9f0',brightBlack:'#707b8d',brightRed:'#d57780',brightGreen:'#b5cf9d',brightYellow:'#f0d79b',brightBlue:'#8faed0',brightMagenta:'#c39bc0',brightCyan:'#9bd0de',brightWhite:'#ffffff'},
       glass:{background:'rgba(3, 8, 12, 0.56)',foreground:'#e8f0f4',cursor:'#ffffff',cursorAccent:'#071015',selectionBackground:'rgba(79,151,166,.58)',black:'#26323a',red:'#ff7b86',green:'#b6d99d',yellow:'#f3d58b',blue:'#9fc5ef',magenta:'#d1a7d4',cyan:'#9bdde7',white:'#ecf4f7',brightBlack:'#73818c',brightRed:'#ff9aa4',brightGreen:'#c9e8b4',brightYellow:'#ffe3a5',brightBlue:'#b7d7fa',brightMagenta:'#e0bae2',brightCyan:'#b7ebf1',brightWhite:'#ffffff'},
       light:{background:'#f7f9fc',foreground:'#17212b',cursor:'#17212b',cursorAccent:'#f7f9fc',selectionBackground:'#b9dce6',black:'#17212b',red:'#b42318',green:'#256c3d',yellow:'#8a5a00',blue:'#1756b3',magenta:'#7b3f8c',cyan:'#0e6675',white:'#596875',brightBlack:'#5e6874',brightRed:'#d92d20',brightGreen:'#2f743f',brightYellow:'#8f5e00',brightBlue:'#2468c7',brightMagenta:'#9650a8',brightCyan:'#116d7e',brightWhite:'#26323d'},
@@ -78,7 +80,7 @@ html[data-scrollbar="false"] .xterm-viewport::-webkit-scrollbar{width:0!importan
         lineHeight: 1.08,
         letterSpacing: 0,
         scrollback: 500000,
-        allowProposedApi: false,
+        allowProposedApi: true,
         allowTransparency: true,
         convertEol: false,
         windowsMode: false,
@@ -100,6 +102,73 @@ html[data-scrollbar="false"] .xterm-viewport::-webkit-scrollbar{width:0!importan
     term.open(document.getElementById('terminal'));
 
     window.term = term;
+
+    // Visual decorations only: the PTY stream, copied text and logs stay unchanged.
+    let mobaHighlightEnabled = false;
+    let highlightSignature = '';
+    let highlightTimer = null;
+    let highlightDecorations = [];
+    function clearMobaHighlights() {
+      for (const item of highlightDecorations) { item.decoration.dispose(); item.marker.dispose(); }
+      highlightDecorations = [];
+    }
+    function scheduleMobaHighlights() {
+      if (highlightTimer !== null) return;
+      highlightTimer = setTimeout(renderMobaHighlights, 100);
+    }
+    function renderMobaHighlights() {
+      highlightTimer = null;
+      const buffer = term.buffer.active;
+      if (!mobaHighlightEnabled || buffer.type !== 'normal') {
+        highlightSignature = ''; clearMobaHighlights(); return;
+      }
+      const rows = [];
+      for (let row=buffer.viewportY; row<Math.min(buffer.length,buffer.viewportY+term.rows,buffer.viewportY+150); row++) {
+        const line=buffer.getLine(row); if(!line) continue;
+        let text='', cells=[], flags='';
+        for(let x=0;x<term.cols;x++) {
+          const cell=line.getCell(x); if(!cell || cell.getWidth()===0) continue;
+          const chars=cell.getChars()||' ';
+          const eligible=cell.isFgDefault() && cell.isBgDefault() && !cell.isInverse() && !cell.isInvisible();
+          for(let j=0;j<chars.length;j++) cells.push({x,width:cell.getWidth(),eligible});
+          text+=chars;flags+=eligible?'1':'0';
+        }
+        rows.push({row,text,cells,flags});
+      }
+      const signature=JSON.stringify(rows.map(r=>[r.row,r.text,r.flags]));
+      if(signature===highlightSignature) return;
+      highlightSignature=signature;clearMobaHighlights();
+      const rules=[
+        {re:/\b(?:error|failed|failure|fatal|denied|offline|down|critical)\b/gi,color:'#ff5555'},
+        {re:/\b(?:warning|warn|pending|timeout|unknown)\b/gi,color:'#ffff55'},
+        {re:/\b(?:ok|success|successful|online|active|running|enabled|connected|up)\b/gi,color:'#55ff55'},
+        {re:/\b(?:\d{1,3}\.){3}\d{1,3}\b/g,color:'#55ffff',ip:true},
+        {re:/(?:\/[\w.~-]+)+(?:\/)?/g,color:'#8080ff'}
+      ];
+      for(const row of rows) {
+        const used=new Set();
+        for(const rule of rules) {
+          rule.re.lastIndex=0;let match;
+          while((match=rule.re.exec(row.text))!==null) {
+            if(highlightDecorations.length>=300) return;
+            if(rule.ip && match[0].split('.').some(n=>Number(n)>255)) continue;
+            const span=row.cells.slice(match.index,match.index+match[0].length);
+            if(!span.length || span.some(c=>!c.eligible||used.has(c.x))) continue;
+            const x=span[0].x;const last=span[span.length-1];
+            const marker=term.registerMarker(row.row-(buffer.baseY+buffer.cursorY));
+            if(!marker) continue;
+            const decoration=term.registerDecoration({marker,x,width:last.x+last.width-x,foregroundColor:rule.color,layer:'bottom'});
+            if(decoration){highlightDecorations.push({marker,decoration});for(const c of span)used.add(c.x);}
+            else marker.dispose();
+          }
+        }
+      }
+    }
+    term.onRender(scheduleMobaHighlights);
+    term.onScroll(scheduleMobaHighlights);
+    term.buffer.onBufferChange(scheduleMobaHighlights);
+    window.getMobaHighlightState=()=>({enabled:mobaHighlightEnabled,count:highlightDecorations.length});
+
 
     const historyBadge = document.getElementById('historyBadge');
     let historyViewportLocked = false;
@@ -296,9 +365,10 @@ html[data-scrollbar="false"] .xterm-viewport::-webkit-scrollbar{width:0!importan
     };
 
     window.setTerminalTheme = function(mode){
-      const selected=['dark','glass','light','coffee','midnight','forest','purple','sepia'].includes(mode)?mode:'dark';
+      const selected=['dark','glass','light','coffee','midnight','forest','purple','sepia','moba','moba_plain'].includes(mode)?mode:'dark';
       document.documentElement.setAttribute('data-theme',selected);
-      if(selected==='light'){document.documentElement.style.setProperty('--page-bg','#f7f9fc');document.documentElement.style.setProperty('--viewport-bg','#edf2f6');document.documentElement.style.setProperty('--scroll-thumb','#a7b6c2');}
+      if(selected==='moba'||selected==='moba_plain'){document.documentElement.style.setProperty('--page-bg','#000000');document.documentElement.style.setProperty('--viewport-bg','#000000');document.documentElement.style.setProperty('--scroll-thumb','#555555');}
+      else if(selected==='light'){document.documentElement.style.setProperty('--page-bg','#f7f9fc');document.documentElement.style.setProperty('--viewport-bg','#edf2f6');document.documentElement.style.setProperty('--scroll-thumb','#a7b6c2');}
       else if(selected==='coffee'){document.documentElement.style.setProperty('--page-bg','#efe2cf');document.documentElement.style.setProperty('--viewport-bg','#e4d3bc');document.documentElement.style.setProperty('--scroll-thumb','#aa8f71');}
       else if(selected==='sepia'){document.documentElement.style.setProperty('--page-bg','#f0dfc4');document.documentElement.style.setProperty('--viewport-bg','#e2cba7');document.documentElement.style.setProperty('--scroll-thumb','#9e805f');}
       else if(selected==='midnight'){document.documentElement.style.setProperty('--page-bg','#07111f');document.documentElement.style.setProperty('--viewport-bg','#0a1728');document.documentElement.style.setProperty('--scroll-thumb','#405a73');}
@@ -307,6 +377,9 @@ html[data-scrollbar="false"] .xterm-viewport::-webkit-scrollbar{width:0!importan
       else if(selected==='glass'){document.documentElement.style.setProperty('--page-bg','transparent');document.documentElement.style.setProperty('--viewport-bg','rgba(4,9,13,.28)');document.documentElement.style.setProperty('--scroll-thumb','rgba(126,161,174,.62)');}
       else{document.documentElement.style.setProperty('--page-bg','#050607');document.documentElement.style.setProperty('--viewport-bg','#080a0d');document.documentElement.style.setProperty('--scroll-thumb','#3a4654');}
       term.options.theme=TERMINAL_THEMES[selected];
+      mobaHighlightEnabled = selected === "moba";
+      highlightSignature = "";
+      scheduleMobaHighlights();
       requestAnimationFrame(function(){try{window.fitTerminal();term.refresh(0,Math.max(0,term.rows-1));term.focus();}catch(e){console.error(e);}});
     };
 

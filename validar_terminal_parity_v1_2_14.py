@@ -8,7 +8,7 @@ html = (root/"assets"/"terminal.html").read_text(encoding="utf-8")
 tree = ast.parse(app)
 
 checks = {
-    "version": 'APP_VERSION = "1.4.0"' in app,
+    "version": 'APP_VERSION = "1.4.1"' in app,
     "one_current_terminal_def":
         app.count("def current_terminal_tab(self):") == 1,
     "terminal_collection":

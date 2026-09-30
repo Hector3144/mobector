@@ -9,7 +9,7 @@ html = (root / "assets" / "terminal.html").read_text(encoding="utf-8")
 ast.parse(app)
 
 checks = {
-    "mobhector_version_present": 'APP_VERSION = "1.4.0"' in app,
+    "mobhector_version_present": 'APP_VERSION = "1.4.1"' in app,
     "capture_keydown": bool(re.search(
         r"document\.addEventListener\(\s*['\"]keydown['\"]",
         html, re.S

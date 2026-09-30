@@ -5,7 +5,7 @@ root = Path(__file__).resolve().parent
 app = (root/"mobhector.pyw").read_text(encoding="utf-8-sig")
 ast.parse(app)
 checks = {
-    "version": 'APP_VERSION = "1.4.0"' in app,
+    "version": 'APP_VERSION = "1.4.1"' in app,
     "launcher": "def open_local_shell" in app,
     "powershell": '"PowerShell"' in app,
     "cmd": '"CMD"' in app,

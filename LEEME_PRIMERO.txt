@@ -1,4 +1,4 @@
-MOBHECTOR 1.4.0 — WINDOWS x64
+MOBHECTOR 1.4.1 — WINDOWS x64
 
 1. Extrae todo el ZIP en una carpeta nueva.
 2. Cierra MobHector.

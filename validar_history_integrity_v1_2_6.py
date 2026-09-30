@@ -8,7 +8,7 @@ HTML = (ROOT/"assets"/"terminal.html").read_text(encoding="utf-8")
 ast.parse(APP)
 
 checks = {
-    "version": 'APP_VERSION = "1.4.0"' in APP,
+    "version": 'APP_VERSION = "1.4.1"' in APP,
     "default_500k": '"terminal_scrollback": 500000' in APP,
     "max_1m": '("terminal_scrollback", 5000, 1000000, 500000)' in APP,
     "protect_default": '"terminal_protect_scrollback": True' in APP,

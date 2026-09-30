@@ -1,5 +1,11 @@
 # Cambios
 
+## 1.4.1 — 2026-09-30
+
+- Paleta Moba clásico sobre negro, con 16 colores ANSI y variante sin resaltado.
+- Resaltado visual de estados, IPv4 válidas y rutas; respeta colores del servidor y pantalla alternativa.
+- Activación única en terminal oscura predeterminada; cambio reversible en Apariencia.
+
 ## 1.4.0 — 2026-09-29
 
 Base recuperada: instalador compartible 1.3.4.

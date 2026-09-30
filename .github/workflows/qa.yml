@@ -34,9 +34,14 @@ jobs:
           QT_QPA_PLATFORM: offscreen
           QTWEBENGINE_CHROMIUM_FLAGS: --disable-gpu
         run: python tools/smoke_gui.py
+      - name: Terminal colours smoke
+        env:
+          QT_QPA_PLATFORM: offscreen
+          QTWEBENGINE_CHROMIUM_FLAGS: --disable-gpu
+        run: python tools/smoke_colors.py
       - name: Build installer package
         run: python tools/build_release.py
       - uses: actions/upload-artifact@v4
         with:
-          name: MobHector-1.4.0-${{ matrix.os }}
+          name: MobHector-1.4.1-${{ matrix.os }}
           path: dist/*

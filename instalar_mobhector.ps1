@@ -2,7 +2,7 @@
 $ErrorActionPreference = "Stop"
 $ProgressPreference = "SilentlyContinue"
 
-$AppVersion = "1.4.0"
+$AppVersion = "1.4.1"
 $SourceDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $InstallDir = Join-Path $env:USERPROFILE "bin"
 $RuntimeDir = Join-Path $InstallDir "MobHectorRuntime"

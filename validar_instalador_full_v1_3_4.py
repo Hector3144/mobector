@@ -7,7 +7,7 @@ bat = (ROOT / 'instalar_mobhector.bat').read_text(encoding='utf-8-sig')
 un = (ROOT / 'desinstalar_mobhector.ps1').read_text(encoding='utf-8-sig')
 
 checks = {
-    'version': '$AppVersion = "1.4.0"' in ps,
+    'version': '$AppVersion = "1.4.1"' in ps,
     'private_runtime': 'MobHectorRuntime' in ps and 'Python' in ps,
     'per_user_python': 'InstallAllUsers=0' in ps,
     'no_system_path_python': 'PrependPath=0' in ps and 'AppendPath=0' in ps,
@@ -53,4 +53,4 @@ for token in forbidden:
 
 if failed:
     raise SystemExit('FULL INSTALLER QA FAILED: ' + ', '.join(failed))
-print(f'FULL INSTALLER 1.4.0 QA: OK ({len(checks)+len(forbidden)} checks)')
+print(f'FULL INSTALLER 1.4.1 QA: OK ({len(checks)+len(forbidden)} checks)')

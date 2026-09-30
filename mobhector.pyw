@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-MobHector v1.4.0
+MobHector v1.4.1
 Cliente SSH/SFTP para Windows con terminal real y transferencias visuales.
 PySide6 + Paramiko.
 """
@@ -81,7 +81,7 @@ from host_key_store import (
 
 
 APP_NAME = "MobHector"
-APP_VERSION = "1.4.0"
+APP_VERSION = "1.4.1"
 ORG_NAME = "MobHector"
 DEVELOPER = "HECTOR PEREZ"
 DEVELOPER_ALIAS = "SGNaomi"
@@ -187,7 +187,8 @@ def _default_config() -> dict:
         "workspace_files_visible": True,
         "workspace_files_width": 455,
         "appearance_mode": "dark",
-        "terminal_theme": "follow",
+        "terminal_theme": "moba",
+        "terminal_colors_v141_migrated": True,
         "accent_color": "cyan",
         "ui_density": "normal",
         "background_image": "",
@@ -333,6 +334,13 @@ def load_config() -> dict:
 
         dirty = False
 
+        # Enable requested classic colours once for existing dark/default terminals.
+        if not data.get("terminal_colors_v141_migrated"):
+            if data.get("terminal_theme", "follow") in ("follow", "dark") and data.get("appearance_mode", "dark") in ("dark", "graphite"):
+                data["terminal_theme"] = "moba"
+            data["terminal_colors_v141_migrated"] = True
+            dirty = True
+
         # Migración 1.2.5: el antiguo valor por defecto era 30.000.
         # Sólo se eleva una vez; después el usuario puede reducirlo si quiere.
         if "terminal_history_v125_migrated" not in data:
@@ -370,7 +378,7 @@ def load_config() -> dict:
 
         if data.get("terminal_theme") not in (
             "follow", "dark", "light", "coffee", "glass",
-            "midnight", "forest", "purple", "sepia"
+            "midnight", "forest", "purple", "sepia", "moba", "moba_plain"
         ):
             data["terminal_theme"] = "follow"
             dirty = True
@@ -1255,6 +1263,8 @@ class AppearanceDialog(QDialog):
         self.terminal_theme = QComboBox()
         for label, value in (
             ("Seguir tema de la aplicación", "follow"),
+            ("Moba clásico · colores y resaltado", "moba"),
+            ("Moba clásico · sólo colores ANSI", "moba_plain"),
             ("Negro", "dark"),
             ("Blanco", "light"),
             ("Café claro", "coffee"),
@@ -6417,11 +6427,13 @@ class TerminalWidget(QWidget):
         mode = str(mode or "dark").lower()
         if mode not in (
             "dark", "glass", "light", "coffee",
-            "midnight", "forest", "purple", "sepia"
+            "midnight", "forest", "purple", "sepia", "moba", "moba_plain"
         ):
             mode = "dark"
         self.visual_mode = mode
         backgrounds = {
+            "moba": QColor("#000000"),
+            "moba_plain": QColor("#000000"),
             "dark": QColor("#050607"),
             "light": QColor("#f7f9fc"),
             "coffee": QColor("#efe2cf"),
