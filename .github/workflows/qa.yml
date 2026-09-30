@@ -2,6 +2,8 @@ name: MobHector QA
 on: [push, pull_request, workflow_dispatch]
 permissions:
   contents: read
+env:
+  PYTHONUTF8: "1"
 jobs:
   test:
     runs-on: ${{ matrix.os }}
@@ -16,7 +18,7 @@ jobs:
           cache: pip
       - name: Install Linux libraries
         if: runner.os == 'Linux'
-        run: sudo apt-get update && sudo apt-get install -y libxtst6 libxkbfile1 libnss3 libasound2t64
+        run: sudo apt-get update && sudo apt-get install -y libxtst6 libxkbfile1 libnss3 libasound2t64 libegl1 libopengl0 libgl1
       - name: Install locked Windows dependencies
         if: runner.os == 'Windows'
         run: |

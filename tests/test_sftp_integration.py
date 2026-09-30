@@ -18,7 +18,7 @@ class Auth(paramiko.ServerInterface):
         return paramiko.OPEN_SUCCEEDED if kind=='session' else paramiko.OPEN_FAILED_ADMINISTRATIVELY_PROHIBITED
 
 class Files(paramiko.SFTPServerInterface):
-    def __init__(self,server,*args,root,**kwargs): super().__init__(server,*args,**kwargs);self.root=Path(root)
+    def __init__(self,server,*args,root,**kwargs): super().__init__(server,*args,**kwargs);self.root=Path(root).resolve()
     def p(self,path):
         target=(self.root/path.lstrip('/')).resolve()
         if not target.is_relative_to(self.root): raise PermissionError(path)
@@ -34,7 +34,7 @@ class Files(paramiko.SFTPServerInterface):
         return result
     def open(self,path,flags,attr):
         try:
-            fd=os.open(self.p(path), flags, 0o600)
+            fd=os.open(self.p(path), flags | getattr(os, 'O_BINARY', 0), 0o600)
             mode='r+b' if flags & os.O_RDWR else ('wb' if flags & os.O_WRONLY else 'rb')
             f=os.fdopen(fd,mode);h=paramiko.SFTPHandle(flags)
             h.readfile=f;h.writefile=f;return h
