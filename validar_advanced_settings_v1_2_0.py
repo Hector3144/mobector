@@ -9,7 +9,7 @@ html = (root / "assets" / "terminal.html").read_text(encoding="utf-8")
 ast.parse(app)
 
 checks = {
-    "version": 'APP_VERSION = "1.5.0"' in app,
+    "version": 'APP_VERSION = "1.5.1"' in app,
     "click_setting": '"terminal_click_to_cursor": True' in app,
     "middle_paste_setting": '"terminal_middle_click_paste": False' in app,
     "bell_setting": '"terminal_bell_style": "none"' in app,

@@ -20,7 +20,7 @@ try:
 except SyntaxError:
     add("python_syntax", False)
 
-add("version_132", 'APP_VERSION = "1.5.0"' in APP)
+add("version_132", 'APP_VERSION = "1.5.1"' in APP)
 
 # Zoom visible y bidireccional en sesión SSH.
 add("ssh_zoom_minus_visible", 'self.zoom_out_button = QPushButton("−")' in APP)

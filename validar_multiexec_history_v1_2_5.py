@@ -6,7 +6,7 @@ app=(root/'mobhector.pyw').read_text(encoding='utf-8-sig')
 html=(root/'assets'/'terminal.html').read_text(encoding='utf-8')
 ast.parse(app)
 checks={
-'version':'APP_VERSION = "1.5.0"' in app,
+'version':'APP_VERSION = "1.5.1"' in app,
 'default_500k':'"terminal_scrollback": 500000' in app,
 'max_1m_py':'("terminal_scrollback", 5000, 1000000, 500000)' in app,
 'max_1m_ui':'self.scrollback.setRange(5000, 1000000)' in app,

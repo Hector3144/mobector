@@ -12,7 +12,7 @@ platon=app[
 ]
 
 checks={
-    "version": 'APP_VERSION = "1.5.0"' in app,
+    "version": 'APP_VERSION = "1.5.1"' in app,
     "parser": "def parse_platon_ssh_command" in app,
     "button": 'QPushButton("⚡ Platon")' in app,
     "none_auth": "transport.auth_none(username)" in app,

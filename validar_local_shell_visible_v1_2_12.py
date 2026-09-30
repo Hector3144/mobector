@@ -7,7 +7,7 @@ ast.parse(app)
 button = app.find('self.local_shell_button.setText(">_ Local")')
 session_list = app.find("self.session_list = QListWidget()")
 checks = {
-    "version": 'APP_VERSION = "1.5.0"' in app,
+    "version": 'APP_VERSION = "1.5.1"' in app,
     "sessions_button": button > 0,
     "button_below_session_list": button > session_list,
     "dropdown": "MenuButtonPopup" in app,

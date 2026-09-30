@@ -1,4 +1,4 @@
-MOBHECTOR 1.5.0 — WINDOWS x64
+MOBHECTOR 1.5.1 — WINDOWS x64
 
 1. Extrae todo el ZIP en una carpeta nueva.
 2. Cierra MobHector.
@@ -15,3 +15,7 @@ Consulta README.md y docs/REVISION_1.4.0.md para mejoras y limitaciones.
 Validado con Qt/WebEngine y SSH/SFTP de prueba en Linux.
 Instalador Windows, ConPTY, Credential Manager y Ruster/Platón reales:
 pendientes de prueba en tu equipo. No es una certificación de seguridad.
+
+X11: servidor gráfico incluido en este ZIP. Actívalo en Editar sesión > X11
+y selecciona Usar servidor X11 integrado (Windows). Deja la ruta vacía.
+No es necesario instalar VcXsrv por separado.

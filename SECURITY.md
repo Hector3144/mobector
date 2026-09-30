@@ -12,4 +12,4 @@ Los hashes del ZIP detectan corrupción, no sustituyen una firma de distribució
 
 No hay un certificado de firma de código de MobHector incluido. No se ha realizado una auditoría externa ni un pentest completo. SFTP publica archivos individualmente; una carpeta completa no es una transacción atómica. Ante pérdida total de conexión puede quedar un temporal remoto que deba limpiarse manualmente. Los enlaces simbólicos remotos no se siguen; se omiten, como en la base anterior.
 
-X11 opcional (1.5.0): el servidor X externo VcXsrv puede abrir un listener TCP autenticado. Sólo se conecta a destinos locales; la cookie SSH temporal se verifica antes de acceder al servidor X. X11 concede acceso gráfico al servidor remoto autorizado. Ver docs/X11.md para alcance, límites y requisitos.
+X11 opcional (1.5.1): el servidor X externo VcXsrv puede abrir un listener TCP autenticado. Sólo se conecta a destinos locales; la cookie SSH temporal se verifica antes de acceder al servidor X. X11 concede acceso gráfico al servidor remoto autorizado. Ver docs/X11.md para alcance, límites y requisitos.

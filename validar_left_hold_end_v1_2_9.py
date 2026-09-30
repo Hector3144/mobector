@@ -6,7 +6,7 @@ app=(root/'mobhector.pyw').read_text(encoding='utf-8-sig')
 html=(root/'assets'/'terminal.html').read_text(encoding='utf-8')
 ast.parse(app)
 checks={
- 'version':'APP_VERSION = "1.5.0"' in app,
+ 'version':'APP_VERSION = "1.5.1"' in app,
  'anchor':'function captureHeldClickAnchor(ev)' in html,
  'absolute_row':'buffer.viewportY + visibleRow' in html,
  'normal_only':'buffer !== term.buffer.normal' in html,

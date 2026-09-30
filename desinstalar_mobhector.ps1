@@ -20,7 +20,7 @@ foreach ($line in Get-Content -LiteralPath $manifest) {
         'desinstalar_mobhector.bat', 'desinstalar_mobhector.ps1',
         'assets\xterm.js', 'assets\xterm.css', 'assets\xterm-addon-fit.js', 'assets\terminal.html',
         'assets\LICENSE-xterm.txt', 'assets\LICENSE-xterm-addon-fit.txt')
-    if ($relative -in $owned) { $files += $relative }
+    if ($relative -in $owned -or $relative.StartsWith('vendor\vcxsrv\')) { $files += $relative }
 }
 foreach ($relative in $files) {
     $path = Join-Path $InstallDir $relative

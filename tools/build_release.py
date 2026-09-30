@@ -6,6 +6,7 @@ import re
 import shutil
 import tempfile
 import zipfile
+from bundle_x11 import bundle
 ROOT=Path(__file__).resolve().parents[1]
 SKIP={'.git','.venv','__pycache__','.pytest_cache','.ruff_cache','dist','MobHectorRuntime'}
 FORBIDDEN={'config.json','known_hosts','.env','MANIFEST_SHA256.txt','MANIFEST_FULL_SHA256.txt'}
@@ -20,9 +21,11 @@ def build():
         stage=Path(temp)/f'MobHector_{version}';stage.mkdir()
         for path in sorted(ROOT.rglob('*')):
             rel=path.relative_to(ROOT)
+            if rel.parts[:2] == ('docs', 'qa'): continue
             if not path.is_file() or any(p in SKIP or p.startswith('.venv.backup.') for p in rel.parts):continue
             if path.name in FORBIDDEN or path.suffix in ('.pyc','.log','.zip','.bundle'):continue
             dst=stage/rel;dst.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(path,dst)
+        bundle(stage)
         def manifest():
             return ''.join(hashlib.sha256(p.read_bytes()).hexdigest()+'  '+p.relative_to(stage).as_posix()+'\n'
                            for p in sorted(stage.rglob('*')) if p.is_file())

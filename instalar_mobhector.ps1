@@ -2,7 +2,7 @@
 $ErrorActionPreference = "Stop"
 $ProgressPreference = "SilentlyContinue"
 
-$AppVersion = "1.5.0"
+$AppVersion = "1.5.1"
 $SourceDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $InstallDir = Join-Path $env:USERPROFILE "bin"
 $RuntimeDir = Join-Path $InstallDir "MobHectorRuntime"
@@ -182,6 +182,14 @@ function Copy-AppFiles {
 }
 
 function Install-TerminalAssets {
+    $X11Source = Join-Path $SourceDir 'vendor\vcxsrv'
+    if (-not (Test-Path -LiteralPath (Join-Path $X11Source 'vcxsrv.exe'))) {
+        throw 'Falta el servidor X11 integrado. Extrae el ZIP completo.'
+    }
+    $VendorDir = Join-Path $InstallDir 'vendor'
+    New-Item -ItemType Directory -Force -Path $VendorDir | Out-Null
+    Copy-Item -Recurse -Force -LiteralPath $X11Source -Destination $VendorDir
+
     foreach ($name in @('xterm.js', 'xterm.css', 'xterm-addon-fit.js', 'terminal.html', 'LICENSE-xterm.txt', 'LICENSE-xterm-addon-fit.txt')) {
         Copy-Item -Force -LiteralPath (Join-Path $SourceDir "assets\$name") -Destination (Join-Path $InstallDir "assets\$name")
     }

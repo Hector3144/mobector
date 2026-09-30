@@ -8,7 +8,7 @@ html = (root/"assets"/"terminal.html").read_text(encoding="utf-8")
 ast.parse(app)
 
 checks = {
-    "version": 'APP_VERSION = "1.5.0"' in app,
+    "version": 'APP_VERSION = "1.5.1"' in app,
     "terminal_backdrop": "self.terminal_backdrop = BackdropWidget()" in app,
     "private_glass": "needs_private_glass" in app,
     "glass_config": '"glass"' in app and "glass_darkness" in app,

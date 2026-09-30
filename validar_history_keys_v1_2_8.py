@@ -8,8 +8,8 @@ html = (root/"assets"/"terminal.html").read_text(encoding="utf-8")
 ast.parse(app)
 
 checks = {
-    "version": 'APP_VERSION = "1.5.0"' in app,
-    "module_version": "MobHector v1.5.0" in app,
+    "version": 'APP_VERSION = "1.5.1"' in app,
+    "module_version": "MobHector v1.5.1" in app,
     "qt_webview": "class TerminalWebView(QWebEngineView):" in app,
     "signal": "history_shortcut = Signal(str)" in app,
     "pageup": "Qt.Key.Key_PageUp" in app,

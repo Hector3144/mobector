@@ -1,3 +1,10 @@
+## 1.5.1 — X11 integrado
+
+- ZIP con VcXsrv x64 y dependencias; instalación y actualización copian el servidor automáticamente.
+- Detección del servidor integrado y directorio de trabajo propio.
+- Builder verifica el instalador original con SHA256; package de CI incluye X11.
+- Prueba de apertura real en Windows pendiente.
+
 # Cambios
 
 ## 1.5.0 — 2026-09-30

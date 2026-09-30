@@ -8,7 +8,7 @@ html = (root/"assets"/"terminal.html").read_text(encoding="utf-8")
 ast.parse(app)
 
 checks = {
-    "version": 'APP_VERSION = "1.5.0"' in app,
+    "version": 'APP_VERSION = "1.5.1"' in app,
     "conpty": "class LocalConPTYChannel:" in app
         and "CreatePseudoConsole" in app
         and "ResizePseudoConsole" in app,

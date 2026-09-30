@@ -79,6 +79,19 @@ def read_setup(stream):
     return header, body, ((name_len+3)//4)*4
 
 
+def find_windows_executable(session, root=None):
+    root = Path(root) if root is not None else Path(__file__).resolve().parent
+    configured = session.get('x11_executable', '')
+    candidates = ([Path(configured)] if configured else
+                  [root / 'vendor' / 'vcxsrv' / 'vcxsrv.exe'] +
+                  [Path(os.environ.get(k, 'C:/Program Files')) / 'VcXsrv' / 'vcxsrv.exe'
+                   for k in ('ProgramFiles', 'ProgramFiles(x86)')])
+    for candidate in candidates:
+        if candidate.name.lower() == 'vcxsrv.exe' and candidate.is_file():
+            return candidate.resolve()
+    raise ValueError('No se encontró el servidor X11. Reinstala el ZIP completo de MobHector o selecciona vcxsrv.exe.')
+
+
 class LocalDisplay:
     def __init__(self, session):
         self.process = None
@@ -99,11 +112,7 @@ class LocalDisplay:
 
     def _start_windows(self, session):
         if os.name != 'nt': raise ValueError('VcXsrv automático sólo está disponible en Windows.')
-        configured = session.get('x11_executable', '')
-        candidates = [configured] if configured else [str(Path(os.environ.get(k, 'C:/Program Files'))/'VcXsrv/vcxsrv.exe') for k in ('ProgramFiles', 'ProgramFiles(x86)')]
-        executable = next((Path(p) for p in candidates if p and Path(p).is_file()), None)
-        if executable is None or executable.name.lower() != 'vcxsrv.exe':
-            raise ValueError('Instala VcXsrv y selecciona vcxsrv.exe en Editar sesión → X11. Consulta docs/X11.md.')
+        executable = find_windows_executable(session)
         self.number = None
         for number in range(60, 100):
             with socket.socket() as probe:
@@ -119,7 +128,7 @@ class LocalDisplay:
         # Never use -ac or modify firewall policy. -auth keeps access control enabled.
         self.process = subprocess.Popen([str(executable), ':'+str(self.number), '-multiwindow',
             '-nowgl', '-listen', 'tcp', '-auth', authority], stdin=subprocess.DEVNULL,
-            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, cwd=str(executable.parent),
             creationflags=getattr(subprocess, 'CREATE_NO_WINDOW', 0))
         deadline = time.monotonic()+10
         while time.monotonic() < deadline:

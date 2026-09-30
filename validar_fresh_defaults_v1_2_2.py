@@ -7,7 +7,7 @@ app = (root / "mobhector.pyw").read_text(encoding="utf-8-sig")
 ast.parse(app)
 
 checks = {
-    "version": 'APP_VERSION = "1.5.0"' in app,
+    "version": 'APP_VERSION = "1.5.1"' in app,
     "zero_sessions": '"sessions": []' in app,
     "blank_name": '"name": ""' in app,
     "blank_host": '"host": ""' in app,

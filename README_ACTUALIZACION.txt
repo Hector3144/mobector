@@ -1,4 +1,4 @@
-MOBHECTOR 1.5.0
+MOBHECTOR 1.5.1
 Usa instalar_o_actualizar.bat. El modo actualización reutiliza Python existente.
 No instala ni cambia dependencias. Si faltan, se aborta y se restaura la copia anterior.
 Se verifica SHA-256 del paquete y de los archivos copiados.

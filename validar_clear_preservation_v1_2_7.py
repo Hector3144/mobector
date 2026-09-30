@@ -8,7 +8,7 @@ html = (root/"assets"/"terminal.html").read_text(encoding="utf-8")
 ast.parse(app)
 
 checks = {
-    "version": 'APP_VERSION = "1.5.0"' in app,
+    "version": 'APP_VERSION = "1.5.1"' in app,
     "builder": "function buildPreservingClearSequence()" in html,
     "all_rows_lf": "'\\n'.repeat(rows)" in html,
     "bottom_cursor": "';1H'" in html,

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-MobHector v1.5.0
+MobHector v1.5.1
 Cliente SSH/SFTP para Windows con terminal real y transferencias visuales.
 PySide6 + Paramiko.
 """
@@ -82,7 +82,7 @@ from host_key_store import (
 
 
 APP_NAME = "MobHector"
-APP_VERSION = "1.5.0"
+APP_VERSION = "1.5.1"
 ORG_NAME = "MobHector"
 DEVELOPER = "HECTOR PEREZ"
 DEVELOPER_ALIAS = "SGNaomi"
@@ -1989,7 +1989,7 @@ def configure_session_x11(owner):
     enabled.setChecked(options.get("x11_enabled", False) is True)
     mode = QComboBox()
     if os.name == "nt":
-        mode.addItem("Iniciar VcXsrv instalado en Windows", "managed")
+        mode.addItem("Usar servidor X11 integrado (Windows)", "managed")
     mode.addItem("Usar servidor X11 existente", "existing")
     mode.setCurrentIndex(max(0, mode.findData(options.get("x11_mode", "managed" if os.name == "nt" else "existing"))))
     display = QLineEdit(options.get("x11_display", ""))
@@ -1997,7 +1997,7 @@ def configure_session_x11(owner):
     authority = QLineEdit(options.get("x11_authority", ""))
     authority.setPlaceholderText("Archivo Xauthority del servidor X (Linux: automático)")
     executable = QLineEdit(options.get("x11_executable", ""))
-    executable.setPlaceholderText("Automático: Program Files/VcXsrv/vcxsrv.exe")
+    executable.setPlaceholderText("Automático: servidor X11 incluido en MobHector")
     def file_row(field, title):
         box = QWidget(); layout = QHBoxLayout(box); layout.setContentsMargins(0,0,0,0)
         button = QPushButton("Examinar")
@@ -2013,7 +2013,7 @@ def configure_session_x11(owner):
     form.addRow("Display local:", display)
     form.addRow("Xauthority local:", file_row(authority, "Seleccionar archivo Xauthority"))
     hint = QLabel("X11 concede a las aplicaciones remotas acceso a la pantalla X. Actívalo sólo para servidores de confianza. "
-                  "VcXsrv se instala aparte; MobHector lo inicia con autenticación y lo cierra al desconectar. "
+                  "El ZIP de MobHector incluye VcXsrv; lo inicia con autenticación y lo cierra al desconectar. "
                   "No desactives el control de acceso del servidor X. Después de guardar, reconecta la sesión SSH.")
     hint.setWordWrap(True); form.addRow(hint)
     def refresh():

@@ -1,6 +1,6 @@
 @echo off
 setlocal EnableExtensions
-title MobHector 1.5.0 - DEBUG
+title MobHector 1.5.1 - DEBUG
 
 set "ROOT=%~dp0"
 set "PY=%ROOT%MobHectorRuntime\Python\python.exe"

@@ -10,7 +10,7 @@ checks=[]
 def add(n,c): checks.append((n,bool(c)))
 try: ast.parse(APP); add('python_syntax',True)
 except SyntaxError: add('python_syntax',False)
-add('version_133','APP_VERSION = "1.5.0"' in APP)
+add('version_133','APP_VERSION = "1.5.1"' in APP)
 add('capture_before_fontsize', HTML.find('zoomPinLiveEnd = isNormalBufferAtBottom();') < HTML.find('term.options.fontSize = BASE_FONT_SIZE'))
 add('zoom_live_end_state','let zoomPinLiveEnd = false;' in HTML)
 add('zoom_live_end_helper','function pinZoomToLiveEnd(generation)' in HTML)

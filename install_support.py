@@ -14,7 +14,7 @@ REQUIRED = {'mobhector.pyw', 'transfer_engine.py', 'host_key_store.py',
             'credential_store.py', 'x11_forwarding.py', 'terminal_io.py', 'session_validation.py', 'remote_text.py',
             'assets/terminal.html', 'assets/xterm.js', 'assets/xterm.css',
             'assets/xterm-addon-fit.js', 'VERSION.txt', 'mobhector.bat', 'requirements.txt',
-            'install_support.py'}
+            'install_support.py', 'vendor/vcxsrv/vcxsrv.exe'}
 INSTALL_NAMES = REQUIRED | {
     'requirements-windows.lock', 'mobhector_debug.bat', 'rusterfiles.bat',
     'actualizar_mobhector.ps1', 'actualizar_mobhector.bat',
@@ -53,7 +53,7 @@ def apply_update(source, destination, backup_root, validate=None):
     source, destination = Path(source).resolve(), Path(destination).resolve()
     if source == destination:
         raise ValueError('Extrae el ZIP en una carpeta distinta a la instalación')
-    entries = [rel for rel in verify_package(source) if rel in INSTALL_NAMES] + ["MANIFEST_SHA256.txt"]
+    entries = [rel for rel in verify_package(source) if rel in INSTALL_NAMES or rel.startswith('vendor/vcxsrv/')] + ["MANIFEST_SHA256.txt"]
     destination.mkdir(parents=True, exist_ok=True)
     backup = Path(backup_root) / (datetime.now().strftime('%Y%m%d-%H%M%S-') + uuid.uuid4().hex[:8])
     backup.mkdir(parents=True)
