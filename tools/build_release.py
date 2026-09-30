@@ -20,7 +20,7 @@ def build():
         stage=Path(temp)/f'MobHector_{version}';stage.mkdir()
         for path in sorted(ROOT.rglob('*')):
             rel=path.relative_to(ROOT)
-            if not path.is_file() or any(p in SKIP for p in rel.parts):continue
+            if not path.is_file() or any(p in SKIP or p.startswith('.venv.backup.') for p in rel.parts):continue
             if path.name in FORBIDDEN or path.suffix in ('.pyc','.log','.zip','.bundle'):continue
             dst=stage/rel;dst.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(path,dst)
         def manifest():

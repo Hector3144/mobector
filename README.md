@@ -67,10 +67,10 @@ Cada push, pull request o ejecución manual de **MobHector QA** genera un único
 
 El nombre y la carpeta del ZIP se obtienen de `VERSION.txt`. Para generarlo localmente: `python tools/build_release.py`; queda en `dist/`. Incluye código, assets, instaladores, documentación y pruebas. No incorpora Python ni las dependencias descargables. Si las pruebas fallan, no se publica un package aprobado.
 
-## Inicio en Linux (Ubuntu/Debian)
+## Inicio en Linux (Ubuntu/Debian y CentOS Stream 9)
 
-Ejecuta `bash instalar_linux.sh` con tu usuario normal, sin sudo. Prepara los paquetes con apt, crea `.venv`, instala `requirements.txt` y abre la aplicación. Sólo apt solicita privilegios. Necesita Internet y Python 3.10 o posterior.
+Ejecuta `bash instalar_linux.sh` con tu usuario normal, sin sudo. Prepara los paquetes con apt o dnf, crea `.venv`, instala `requirements.txt` y abre la aplicación. Sólo apt/dnf solicita privilegios. Necesita Internet y Python 3.10 o posterior.
 
 Funciona desde el ZIP extraído o descargando únicamente el script: en ese caso clona el repositorio en `~/.local/share/MobHector/source` (respeta `XDG_DATA_HOME`). Si encuentra una copia previa, la reutiliza sin sobrescribirla ni actualizarla automáticamente.
 
-Para volver a abrir: `bash ejecutar_linux.sh` desde la carpeta del proyecto. Opciones de instalación: `--no-launch` prepara sin abrir; `--skip-system` omite apt. Necesitas escritorio gráfico; no ejecutes MobHector como root. Linux conserva las limitaciones descritas: no hay consola ConPTY ni Windows Credential Manager. Instalador verificado por sintaxis y ramas sin cambios; instalación completa pendiente en Ubuntu/Debian real.
+Para volver a abrir: `bash ejecutar_linux.sh` desde la carpeta del proyecto. Opciones de instalación: `--no-launch` prepara sin abrir; `--skip-system` omite apt/dnf. Necesitas escritorio gráfico; no ejecutes MobHector como root. Linux conserva las limitaciones descritas: no hay consola ConPTY ni Windows Credential Manager. En CentOS Stream 9 instala Python 3.11 paralelo al Python 3.9 del sistema y lo utiliza para crear `.venv`. Si encuentra un entorno antiguo incompatible, lo conserva como `.venv.backup.*`. No cambia el Python de dnf, SELinux ni repositorios. Instalador verificado por sintaxis y selección de paquetes con comandos simulados; instalación completa pendiente en el equipo real.

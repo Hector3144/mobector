@@ -18,3 +18,5 @@ dist/
 *.bundle
 MANIFEST_SHA256.txt
 MANIFEST_FULL_SHA256.txt
+
+.venv.backup.*/
